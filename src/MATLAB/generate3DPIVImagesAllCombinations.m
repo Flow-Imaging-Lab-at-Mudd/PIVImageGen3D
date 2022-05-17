@@ -44,6 +44,15 @@ end
 if isempty(outOfPlaneStdDeviation)
     error('"outOfPlaneStdDeviation" variable must not be empty');
 end
+if ~exist('winSize','var')
+    error('"winSize" variable must be set. Define the final interrogation window size (1 dimension)')
+end
+if ~exist('sheetThickness','var')
+    error('"sheetThickness" variable must be set. Define the final interrogation window size (1 dimension)')
+end
+if ~exist('zWinScale','var')
+    warning('"zWinScale" variable not defined using default value of 1.');
+end
 
 if numberOfRuns < length(outOfPlaneStdDeviation)
     warning('Adjusting numberOfRuns to match number of outOfPlaneStdDeviation combinations');
@@ -109,7 +118,7 @@ for i=1:size(flows, 2)
                                         pivParameters.particleIntensityPeak=150.0*maxValue/255.0; %Particle intensity at the center of the light sheet (75% a 100%)
                                         pivParameters.noiseLevel=noiseLevel(noiseLevelIndex);%30;         %dBW (10 log (V^2)) - 20dBW -> 10 intensity variation
             
-                                        pivParameters.lastWindow=[winSize(winSizeIndex) winSize(winSizeIndex)];    %Last PIV Window size (no overlap) - (y;x)
+                                        pivParameters.lastWindow=[winSize(winSizeIndex) winSize(winSizeIndex) zWinScale*winSize(winSizeIndex)];    %Last PIV Window size (no overlap) - (y;x;z)
                                         pivParameters.laserSheetThickness=sheetThickness(sheetThickIndex); %2mm laser sheet thickness
             
                                         pivParameters.outOfPlaneStdDeviation=outOfPlaneStdDeviation(outOfPlaneStdDeviationIndex); %Out of plane velocity standard devitation in mm/frame - (0.025, or 0.05, or 0,10 mm)
@@ -119,16 +128,19 @@ for i=1:size(flows, 2)
                                         imageProperties={};
                                         imageProperties.marginsX=2*pivParameters.lastWindow(2);
                                         imageProperties.marginsY=2*pivParameters.lastWindow(1);
+                                        imageProperties.marginsZ=2*pivParameters.lastWindow(3);
                                         imageProperties.sizeX=sizeX + imageProperties.marginsX;
                                         imageProperties.sizeY=sizeY + imageProperties.marginsY;
+
                                         imageProperties.mmPerPixel=7.5*10^-2;%For 1.5px particle radius and aprox. 512x512 area size
                                         %Adjust scale conversion based on particle size
                                         imageProperties.mmPerPixel=imageProperties.mmPerPixel * pivParameters.particleRadius / 1.5;
+                                        imageProperties.voxPerSheet=pivParameters.laserSheetThickness / imageProperties.mmPerPixel + imageProperties.marginsZ;
             
                                         DI = single(pivParameters.lastWindow(1)) * imageProperties.mmPerPixel;
                                         dtao = 2.0 * single(pivParameters.particleRadius) * imageProperties.mmPerPixel;
-                                        pivParameters.c = single(pivParameters.Ni) / (pivParameters.laserSheetThickness * DI^2);
-                                        pivParameters.Ns = single(pivParameters.Ni)/(4.0/pi*DI/dtao)
+                                        pivParameters.c = single(pivParameters.Ni) / (pivParameters.laserSheetThickness * DI^2); % concentration
+                                        pivParameters.Ns = single(pivParameters.Ni)/(4.0/pi*DI/dtao); % source density
             
                                         disp(['Generating combination ' num2str(currentCombination) ' of ' num2str(totalCombinations)]);
                                         [Im0, Im1, particleMap, flowField] = generatePIVImages(flowParameters, imageProperties, pivParameters, run, displayFlowField, closeFlowField);

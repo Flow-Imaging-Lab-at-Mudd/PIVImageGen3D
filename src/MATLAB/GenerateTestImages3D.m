@@ -33,12 +33,13 @@ flows={'rankine_vortex'};
 
 bitDepths=8; % leave at 8 bits for all tests
 deltaXFactor=[0.05 0.25]; % max. displacement as a fraction of the final window size
-particleRadius=[1.5 3]; % in pixels
+particleRadius=[1.5]; % in pixels
 Ni=[6 10]; % # of particles in each window
 noiseLevel=0; % turn off noise for now
 outOfPlaneStdDeviation=0; % turn off out of plane motion for now
 numberOfRuns=1;
-winSize = [16 32]; % interrogation window sizes
-sheetThickness = [10 50]; % light sheet thickness in mm
+winSize = [32]; % interrogation window sizes
+sheetThickness = [30]; % light sheet thickness in mm
+zWinScale = 1; % scale of z interrogation window size relative to x and y (assumed to be same)
 
 generate3DPIVImagesAllCombinations;

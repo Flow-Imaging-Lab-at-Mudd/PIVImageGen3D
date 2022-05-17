@@ -21,8 +21,13 @@
 clear *; clear GLOBAL *;
 close all;
 
+% configure images and cameras
 sizeX=512; %Image width without margins
 sizeY=512; %Image height without margins
+
+% use machine vision toolbox to create camera
+cameras = CentralCamera('focal', 0.015, 'pixel', 10e-6, ...
+    'resolution', [sizeX sizeY], 'centre', [sizeX/2 sizeY/2], 'name', 'mycamera');
 
 displayFlowField=true; %Display image of each flow field,
 closeFlowField=true; %and close it automatically
@@ -31,10 +36,11 @@ closeFlowField=true; %and close it automatically
 %        'shear', 'shear_22d3', 'shear_45d0', 'decaying_vortex'};
 flows={'rankine_vortex'};
 
+% configure PIV
 bitDepths=8; % leave at 8 bits for all tests
-deltaXFactor=[0.05 0.25]; % max. displacement as a fraction of the final window size
-particleRadius=[1.5]; % in pixels
-Ni=[6 10]; % # of particles in each window
+deltaXFactor=0.05; % max. displacement as a fraction of the final window size
+particleRadius=1.5; % in pixels
+Ni=1; % # of particles in each window
 noiseLevel=0; % turn off noise for now
 outOfPlaneStdDeviation=0; % turn off out of plane motion for now
 numberOfRuns=1;

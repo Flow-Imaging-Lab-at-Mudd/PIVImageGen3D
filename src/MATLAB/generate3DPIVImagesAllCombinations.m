@@ -139,11 +139,11 @@ for i=1:size(flows, 2)
             
                                         DI = single(pivParameters.lastWindow(1)) * imageProperties.mmPerPixel;
                                         dtao = 2.0 * single(pivParameters.particleRadius) * imageProperties.mmPerPixel;
-                                        pivParameters.c = single(pivParameters.Ni) / (pivParameters.laserSheetThickness * DI^2); % concentration
+                                        pivParameters.c = single(pivParameters.Ni) / (DI^2 * zWinScale * DI); % concentration (particles per mm3)
                                         pivParameters.Ns = single(pivParameters.Ni)/(4.0/pi*DI/dtao); % source density
             
                                         disp(['Generating combination ' num2str(currentCombination) ' of ' num2str(totalCombinations)]);
-                                        [Im0, Im1, particleMap, flowField] = generatePIVImages(flowParameters, imageProperties, pivParameters, run, displayFlowField, closeFlowField);
+                                        [~, ~, particleMap, flowField] = generatePIVImagesMultiCam(flowParameters, imageProperties, pivParameters, run, cameras, displayFlowField, closeFlowField);
                                         currentCombination = currentCombination + 1;
                                     end
                                 end

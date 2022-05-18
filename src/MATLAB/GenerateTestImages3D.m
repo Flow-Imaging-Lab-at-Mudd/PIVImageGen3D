@@ -25,9 +25,20 @@ close all;
 sizeX=512; %Image width without margins
 sizeY=512; %Image height without margins
 
-% use machine vision toolbox to create camera
-cameras = CentralCamera('focal', 0.015, 'pixel', 10e-6, ...
-    'resolution', [sizeX sizeY], 'centre', [sizeX/2 sizeY/2], 'name', 'mycamera');
+% use machine vision toolbox to create camera array
+pixPitch = 3.45e-6; % pixel dimension (in m?)
+fL = 0.025; % focal length (in m?)
+
+% vectors of camera positions in m
+xpos = 0; 
+ypos = 0;
+zpos = -0.542;
+
+T = SE3(xpos, ypos, zpos);
+
+cameras = CentralCamera('focal', fL, 'pixel', pixPitch, ...
+    'resolution', [sizeX sizeY], 'centre', [sizeX/2 sizeY/2], 'name', 'cam1');
+cameras = cameras.move(T);
 
 displayFlowField=true; %Display image of each flow field,
 closeFlowField=true; %and close it automatically
@@ -38,7 +49,7 @@ flows={'rankine_vortex'};
 
 % configure PIV
 bitDepths=8; % leave at 8 bits for all tests
-deltaXFactor=0.05; % max. displacement as a fraction of the final window size
+deltaXFactor=0.25; % max. displacement as a fraction of the final window size
 particleRadius=1.5; % in pixels
 Ni=1; % # of particles in each window
 noiseLevel=0; % turn off noise for now

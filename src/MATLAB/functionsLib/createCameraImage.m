@@ -18,26 +18,23 @@
 %Special thanks go to Ana Margarida and Rui Aleixo
 %and their initial effort on building a draft for a similar tool.
 
-function [Im0, Im1] = createCameraImage(pivParameters, imageProperties, particleMap, flowField, cam)
-%createImages Creates a pair of PIV images for the theoretical flow field,
-%given the particles position map, as well as, image and PIV parameters.
+function [Im0] = createCameraImage(pivParameters, imageProperties, particleMap, cam)
+%createImages Creates a particle image given the particles position map, as well as, image, camera and PIV parameters.
 %   Returns:
 %   Im0 - the initial image with particles at their initial random placement
-%   Im1 - the final image with particles at their final locations, i.e., after displacements in-plane and out-of-plane are applied.
 
     Im0 = zeros([imageProperties.sizeY, imageProperties.sizeX]);
-    Im1 = zeros([imageProperties.sizeY, imageProperties.sizeX]);
     
-    for n=1:length(particleMap.allParticles)
-       x = particleMap.allParticles(n).x;
-       y = particleMap.allParticles(n).y;
-       intensityA = particleMap.allParticles(n).intensityA;
-       [x1, y1] = flowField.computeDisplacementAtImagePosition(x, y);
-       displacedX = x1;
-       displacedY = y1;
-       Im0 = renderParticle(pivParameters, imageProperties, x, y, intensityA, Im0);
-       intensityB = particleMap.allParticles(n).intensityB;
-       Im1 = renderParticle(pivParameters, imageProperties, displacedX, displacedY, intensityB, Im1);
+    for n=1:length(particleMap.x)
+       x = particleMap.x(n);
+       y = particleMap.y(n);
+       z = particleMap.z(n);
+       intensityA = particleMap.intensityA(n);
+       pt = [x/1000, y/1000, z/1000]'; % also includes a unit conversion
+       ximg = cam.project(pt);
+       xpix(n) = ximg(1);
+       ypix(n) = ximg(2);
+       Im0 = renderParticle(pivParameters, imageProperties, ximg(1), ximg(2), intensityA, Im0);
     end
     
     leftMargin = ceil(imageProperties.marginsX/2);
@@ -46,20 +43,15 @@ function [Im0, Im1] = createCameraImage(pivParameters, imageProperties, particle
     bottomMargin = ceil(imageProperties.sizeY - imageProperties.marginsY/2);
     
     Im0 = Im0(topMargin+1:bottomMargin, leftMargin+1:rightMargin);
-    Im1 = Im1(topMargin+1:bottomMargin, leftMargin+1:rightMargin);
     
     if pivParameters.noiseLevel > 0
         %generate white noise
         maxValue = 2^pivParameters.bits-1;
         noiseIm0=wgn(imageProperties.sizeY - imageProperties.marginsY, ...
             imageProperties.sizeX - imageProperties.marginsX, pivParameters.noiseLevel);
-        noiseIm1=wgn(imageProperties.sizeY - imageProperties.marginsY, ...
-            imageProperties.sizeX - imageProperties.marginsX, pivParameters.noiseLevel);
         
         noiseIm0 = noiseIm0 .* maxValue / 255.0;
-        noiseIm1 = noiseIm1 .* maxValue / 255.0;
         
         Im0 = Im0 + noiseIm0;
-        Im1 = Im1 + noiseIm1;
     end
 end

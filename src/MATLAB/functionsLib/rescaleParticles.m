@@ -21,9 +21,15 @@
 function [particleWorld] = rescaleParticles(particleMap, imageProperties)
     
 %   Returns:
-%   Particle positions rescaled to mm instead of voxel units
-    particleWorld.x = [particleMap.allParticles.x]'*(imageProperties.mmPerPixel);
-    particleWorld.y = [particleMap.allParticles.y]'*(imageProperties.mmPerPixel);
+%   Particle positions rescaled to mm instead of voxel units and with
+%   center of volume at 0,0 in x and y
+
+% calculate shifts in pixels
+    shiftx = imageProperties.sizeX/2;
+    shifty = imageProperties.sizeY/2;
+
+    particleWorld.x = ([particleMap.allParticles.x]'-shiftx)*(imageProperties.mmPerPixel);
+    particleWorld.y = ([particleMap.allParticles.y]'-shifty)*(imageProperties.mmPerPixel);
     particleWorld.z = [particleMap.allParticles.z]'*(imageProperties.mmPerPixel);
     particleWorld.intensityA = [particleMap.allParticles.intensityA]';
     particleWorld.intensityB = [particleMap.allParticles.intensityB]';

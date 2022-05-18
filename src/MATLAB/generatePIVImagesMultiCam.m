@@ -19,7 +19,7 @@
 %and their initial effort on building a draft for a similar tool.
 
 function [ Im0, Im1, particleMap, flowField ] = generatePIVImagesMultiCam( ...
-          flowParameters, imageProperties, pivParameters, run, cams,...
+          flowParameters, imageProperties, pivParameters, run, cam,...
           displayFlowField, closeFlowField )
 %generatePIVImages Generates a pair of Synthetic PIV images according to specified
 %paramteres and properties.
@@ -79,15 +79,22 @@ if displayFlowField
     end
 end
 
+% move export earlier - probably don't need everything exported but leaving
+% for now
+exportFlowFields(flowParameters, pivParameters, imageProperties, particleMap, flowField, outFolder, run);
+
 particleMap2 = displaceParticles(particleMap, flowField);
 
+% rescale particle positions to mm before projecting into each camera
+% (going through steps in pixels first generates reasonable displacements)
 particleWorld = rescaleParticles(particleMap,imageProperties);
-particleWorld2 = rescaleParticles(particleMap,imageProperties);
+particleWorld2 = rescaleParticles(particleMap2,imageProperties);
 
-[Im0] = createCameraImage(pivParameters, imageProperties, particleWorld, cams);
+
+% to do, add loop over all multi cameras
+[Im0] = createCameraImage(pivParameters, imageProperties, particleWorld, cam);
+[Im1] = createCameraImage(pivParameters, imageProperties, particleWorld2, cam);
 [Im0, Im1] = adjustImagesIntensity(pivParameters, Im0, Im1);
-
-exportFlowFields(flowParameters, pivParameters, imageProperties, particleMap, flowField, outFolder, run);
 
 %Save PIV image
 imwrite(Im0, [outFolder filesep flowParameters.flowType num2str(run, '%02d') '_0.tif']);

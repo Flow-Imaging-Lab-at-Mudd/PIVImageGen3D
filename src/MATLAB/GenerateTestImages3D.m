@@ -26,25 +26,39 @@ sizeX=512; %Image width without margins
 sizeY=512; %Image height without margins
 
 % use machine vision toolbox to create camera array
-pixPitch = 3.45e-6; % pixel dimension (in m?)
-fL = 0.025; % focal length (in m?)
+pixPitch = 3.45e-6; % pixel dimension (in m)
+fL = 0.025; % focal length (in m)
 
 % create base camera with shared parameters for all cameras
 camBase = CentralCamera('focal', fL, 'pixel', pixPitch, ...
     'resolution', [sizeX sizeY], 'centre', [sizeX/2 sizeY/2], 'name', 'camBase');
 
 % vectors of camera positions in m
-% need to add rotation option later
-xpos = [-0.01 0.01]; 
+showCameras=true; % for debugging camera positions
+xpos = [-0.1 0.1]; 
 ypos = [0 0];
 zpos = [-0.542 -0.542];
 
+% rotations about each axis in deg
+rx = [0 0];
+ry = [10 -10];
+rz = [0 0];
+
 % create a cell array of all the cameras
 for ncam = 1:length(xpos)
-    T = SE3(xpos(ncam), ypos(ncam), zpos(ncam));
+    rot = rpy2tr(rx(ncam), ry(ncam), rz(ncam),'deg');
+    rot = rot(1:3,1:3);
+    T = SE3(rot,[xpos(ncam) ypos(ncam) zpos(ncam)]);
     camTmp = camBase.move(T);
     camTmp.name = ['cam' num2str(ncam)];
     cams{ncam} = camTmp;
+    
+    if showCameras
+        figure(1)
+        camTmp.plot_camera
+        hold on
+        axis equal
+    end
 end
 
 displayFlowField=false; %Display image of each flow field,

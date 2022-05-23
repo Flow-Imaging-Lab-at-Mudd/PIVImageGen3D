@@ -31,9 +31,9 @@ MATLAB is required to run this tool
 
 Camera functions rely on the Machine Vision Toolbox by Peter Corke (https://github.com/petercorke/machinevision-toolbox-matlab) and the Spatial Math Toolbox by Peter Corke (https://petercorke.com/toolboxes/spatial-math-toolbox/)
 
-## Obtaining the code
+## Acknowledgment
 
-The official source repository for PIV Image Generator is located in the CoreRasurae Gitlab repository and can be cloned using the
+This code extends PIV Image Generator to multicamera imaging. The official source repository for the original PIV Image Generator is located in the CoreRasurae Gitlab repository and can be cloned using the
 following command.
 
 ```bash

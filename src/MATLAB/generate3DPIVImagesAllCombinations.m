@@ -143,7 +143,7 @@ for i=1:size(flows, 2)
                                         pivParameters.Ns = single(pivParameters.Ni)/(4.0/pi*DI/dtao); % source density
             
                                         disp(['Generating combination ' num2str(currentCombination) ' of ' num2str(totalCombinations)]);
-                                        [~, ~, particleMap, flowField] = generatePIVImagesMultiCam(flowParameters, imageProperties, pivParameters, run, cameras, displayFlowField, closeFlowField);
+                                        [~, ~, particleMap, flowField] = generatePIVImagesMultiCam(flowParameters, imageProperties, pivParameters, run, cams, displayFlowField, closeFlowField);
                                         currentCombination = currentCombination + 1;
                                     end
                                 end

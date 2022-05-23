@@ -43,6 +43,15 @@ outFolder = ['out' filesep createPathNameForTestAndConditions( flowParameters, p
 if ~exist(outFolder, 'dir')
     mkdir(outFolder);
 end
+
+for ncam = 1:length(cam)
+    outCamera = [outFolder filesep cam{ncam}.name];
+    if ~exist(outCamera, 'dir')
+        mkdir(outCamera)
+    end
+end
+
+
 minDI = min(pivParameters.lastWindow(1), pivParameters.lastWindow(1));
 
 %Convert maxVelocity from mm/s to px/s and compute adequate dt for the
@@ -92,16 +101,18 @@ particleWorld2 = rescaleParticles(particleMap2,imageProperties);
 
 
 % to do, add loop over all multi cameras
-[Im0] = createCameraImage(pivParameters, imageProperties, particleWorld, cam);
-[Im1] = createCameraImage(pivParameters, imageProperties, particleWorld2, cam);
-[Im0, Im1] = adjustImagesIntensity(pivParameters, Im0, Im1);
-
-%Save PIV image
-imwrite(Im0, [outFolder filesep flowParameters.flowType num2str(run, '%02d') '_0.tif']);
-imwrite(Im1, [outFolder filesep flowParameters.flowType num2str(run, '%02d') '_1.tif']);
-
-toc();
-disp('--------------------------------------------------------')
+for ncam = 1:length(cam)
+    [Im0] = createCameraImage(pivParameters, imageProperties, particleWorld, cam{ncam});
+    [Im1] = createCameraImage(pivParameters, imageProperties, particleWorld2, cam{ncam});
+    [Im0, Im1] = adjustImagesIntensity(pivParameters, Im0, Im1);
+    
+    %Save PIV image
+    imwrite(Im0, [outFolder filesep cam{ncam}.name filesep num2str(run, '%02d') '_0.tif']);
+    imwrite(Im1, [outFolder filesep cam{ncam}.name filesep  num2str(run, '%02d') '_1.tif']);
+    
+    toc();
+    disp('--------------------------------------------------------')
+end
 
 end
 

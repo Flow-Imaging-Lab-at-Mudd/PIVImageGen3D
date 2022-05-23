@@ -29,19 +29,26 @@ sizeY=512; %Image height without margins
 pixPitch = 3.45e-6; % pixel dimension (in m?)
 fL = 0.025; % focal length (in m?)
 
+% create base camera with shared parameters for all cameras
+camBase = CentralCamera('focal', fL, 'pixel', pixPitch, ...
+    'resolution', [sizeX sizeY], 'centre', [sizeX/2 sizeY/2], 'name', 'camBase');
+
 % vectors of camera positions in m
-xpos = 0; 
-ypos = 0;
-zpos = -0.542;
+% need to add rotation option later
+xpos = [-0.01 0.01]; 
+ypos = [0 0];
+zpos = [-0.542 -0.542];
 
-T = SE3(xpos, ypos, zpos);
+% create a cell array of all the cameras
+for ncam = 1:length(xpos)
+    T = SE3(xpos(ncam), ypos(ncam), zpos(ncam));
+    camTmp = camBase.move(T);
+    camTmp.name = ['cam' num2str(ncam)];
+    cams{ncam} = camTmp;
+end
 
-cameras = CentralCamera('focal', fL, 'pixel', pixPitch, ...
-    'resolution', [sizeX sizeY], 'centre', [sizeX/2 sizeY/2], 'name', 'cam1');
-cameras = cameras.move(T);
-
-displayFlowField=true; %Display image of each flow field,
-closeFlowField=true; %and close it automatically
+displayFlowField=false; %Display image of each flow field,
+closeFlowField=false; %and close it automatically
 
 %flows={'rk_uniform' 'rankine_vortex' 'parabolic' 'uniform' 'stagnation',...
 %        'shear', 'shear_22d3', 'shear_45d0', 'decaying_vortex'};
@@ -54,7 +61,7 @@ particleRadius=1.5; % in pixels
 Ni=1; % # of particles in each window
 noiseLevel=0; % turn off noise for now
 outOfPlaneStdDeviation=0; % turn off out of plane motion for now
-numberOfRuns=1;
+numberOfRuns=1; % number of trials with each parameter set to generate
 winSize = [32]; % interrogation window sizes
 sheetThickness = [30]; % light sheet thickness in mm
 zWinScale = 1; % scale of z interrogation window size relative to x and y (assumed to be same)

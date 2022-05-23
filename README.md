@@ -27,7 +27,8 @@ The image generator is easily extensible for other flow types.
 | Parabolic Flow |
 
 ## Prerequisites
-MATLAB is required to run this tool, as available in src/MATLAB folder.
+MATLAB is required to run this tool
+Camera functions rely on the Machine Vision Toolbox by Peter Corke (https://github.com/petercorke/machinevision-toolbox-matlab)
 
 ## Obtaining the code
 

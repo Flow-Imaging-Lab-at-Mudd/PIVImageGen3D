@@ -19,7 +19,7 @@
 %and their initial effort on building a draft for a similar tool.
 
 function [ Im0, Im1, particleMap, flowField ] = generatePIVImagesMultiCam( ...
-          flowParameters, imageProperties, pivParameters, run, cam,...
+          flowParameters, imageProperties, pivParameters, run, cam, arrayName, baseOutput,...
           displayFlowField, closeFlowField )
 %generatePIVImages Generates a pair of Synthetic PIV images according to specified
 %paramteres and properties.
@@ -39,7 +39,7 @@ addpath functionsLib;
 
 tic();
 
-outFolder = ['out' filesep createPathNameForTestAndConditions( flowParameters, pivParameters )];
+outFolder = [baseOutput filesep arrayName filesep createPathNameForTestAndConditions( flowParameters, pivParameters )];
 if ~exist(outFolder, 'dir')
     mkdir(outFolder);
 end

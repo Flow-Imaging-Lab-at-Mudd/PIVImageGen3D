@@ -21,6 +21,9 @@
 clear *; clear GLOBAL *;
 close all;
 
+% specify base path of where to save data
+baseOutput = 'out';
+
 % configure images and cameras
 sizeX=512; %Image width without margins
 sizeY=512; %Image height without margins
@@ -32,6 +35,7 @@ fL = 0.025; % focal length (in m)
 % create base camera with shared parameters for all cameras
 camBase = CentralCamera('focal', fL, 'pixel', pixPitch, ...
     'resolution', [sizeX sizeY], 'centre', [sizeX/2 sizeY/2], 'name', 'camBase');
+arrayName = 'twoCam'; % identifier for camera array configuration (used in file path)
 
 % vectors of camera positions in m
 showCameras=true; % for debugging camera positions

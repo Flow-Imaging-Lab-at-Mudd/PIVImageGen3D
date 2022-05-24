@@ -8,7 +8,7 @@ function res = writeCamConfig(cams,arrayName,baseOutput)
         mkdir(basePath)
     end
 
-    outFile = [basePath filesep 'calibrationResults4.dat'];
+    outFile = [basePath filesep 'calibrationResults.dat'];
     fid = fopen(outFile,'a');
 
     for ncam = 1:length(cams)

@@ -50,8 +50,11 @@ rz = [0 0];
 
 % create a cell array of all the cameras
 for ncam = 1:length(xpos)
-    rot = rpy2tr(rx(ncam), ry(ncam), rz(ncam),'deg');
-    rot = rot(1:3,1:3);
+    % rotation matrices
+    rxm = rotx(rx(ncam));
+    rym = roty(ry(ncam));
+    rzm = rotz(rz(ncam));
+    rot = rxm*rym*rzm;
     T = SE3(rot,[xpos(ncam) ypos(ncam) zpos(ncam)]);
     camTmp = camBase.move(T);
     camTmp.name = ['cam' num2str(ncam)];

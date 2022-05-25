@@ -27,6 +27,7 @@ baseOutput = 'out';
 % configure images and cameras
 sizeX=512; %Image width without margins
 sizeY=512; %Image height without margins
+scale=7.5*10^-2; % mm per pixel
 
 % use machine vision toolbox to create camera array
 pixPitch = 3.45e-6; % pixel dimension (in m)

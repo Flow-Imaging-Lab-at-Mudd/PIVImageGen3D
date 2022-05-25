@@ -1,6 +1,10 @@
 inputChecks;
 
-writeCamConfig(cams,arrayName,baseOutput);
+scaleProps.X = sizeX;
+scaleProps.Y = sizeY;
+scaleProps.perpix = scale;
+
+writeCamConfig(cams,arrayName,baseOutput,scaleProps);
 
 totalCombinations = size(flows, 2)*length(deltaXFactor)*length(bitDepths)* ...
     length(particleRadius)*length(Ni)*length(noiseLevel)*length(winSize)*length(sheetThickness)*numberOfRuns;
@@ -65,7 +69,7 @@ for i=1:size(flows, 2)
                                         imageProperties.sizeX=sizeX + imageProperties.marginsX;
                                         imageProperties.sizeY=sizeY + imageProperties.marginsY;
 
-                                        imageProperties.mmPerPixel=7.5*10^-2;%For 1.5px particle radius and aprox. 512x512 area size
+                                        imageProperties.mmPerPixel=scale;%For 1.5px particle radius and aprox. 512x512 area size
                                         %Adjust scale conversion based on particle size
                                         imageProperties.mmPerPixel=imageProperties.mmPerPixel * pivParameters.particleRadius / 1.5;
                                         imageProperties.voxPerSheet=pivParameters.laserSheetThickness / imageProperties.mmPerPixel + imageProperties.marginsZ;

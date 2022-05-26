@@ -20,6 +20,11 @@ function res = writeCamConfig(cams,arrayName,baseOutput, scaleProps)
     for ncam = 1:length(cams)
         currentCam = cams{ncam};
         Pmat = currentCam.C;
+
+        % invert y to account for coordinate differences
+        Pmat(2,2) = -Pmat(2,2);
+        Pmat(2,4) = -Pmat(2,4);
+
         position = currentCam.T.t'*1000; % write position, converted to mm
         fprintf(fid, [currentCam.name '\n']);
         dlmwrite(outFile,Pmat,'-append','Delimiter','\t');

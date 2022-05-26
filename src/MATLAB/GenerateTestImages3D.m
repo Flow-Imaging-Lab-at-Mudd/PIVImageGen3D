@@ -3,7 +3,7 @@
 % Three-dimensional extension: 2022 Flow Imaging Lab at Mudd (Prof. Leah
 % Mendelson, Zhian Zhou)
 % 
-% Original piv-image generator:
+% Original piv-imageEr:
 %Copyright (C) 2019  Luís Mendes, Prof. Rui Ferreira, Prof. Alexandre Bernardino
 %
 %This program is free software; you can redistribute it and/or
@@ -48,7 +48,7 @@ arrayName = 'twoCam'; % identifier for camera array configuration (used in file 
 showCameras=true; % for debugging camera positions
 %xpos = [-0.1 0.1];
 xpos = [0 0];
-ypos = [0 0];
+ypos = [0 0]; %mvtb appears to use world coordinates y+ down
 zpos = [-0.542 -0.542];
 
 % rotations about each axis in deg

@@ -97,7 +97,7 @@ particleWorld = rescaleParticles(particleMap,imageProperties);
 particleWorld2 = rescaleParticles(particleMap2,imageProperties);
 
 
-% to do, add loop over all multi cameras
+% loop over all multi cameras
 for ncam = 1:length(cam)
     [Im0] = createCameraImage(pivParameters, imageProperties, particleWorld, cam{ncam});
     [Im1] = createCameraImage(pivParameters, imageProperties, particleWorld2, cam{ncam});
@@ -115,9 +115,10 @@ for ncam = 1:length(cam)
         end
     end
     
-    %Save PIV image
+    %Save PIV image and particle positions
     imwrite(Im0, [outFolder filesep cam{ncam}.name filesep num2str(run, '%02d') '_0.tif']);
     imwrite(Im1, [outFolder filesep cam{ncam}.name filesep  num2str(run, '%02d') '_1.tif']);
+    save([outFolder filesep 'particles' num2str(run, '%02d') '.mat'],'particleMap','particleWorld','particleMap2','particleWorld2');
     
     toc();
     disp('--------------------------------------------------------')

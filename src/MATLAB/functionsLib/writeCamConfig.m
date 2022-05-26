@@ -5,7 +5,7 @@ function res = writeCamConfig(cams,arrayName,baseOutput, scaleProps)
     basePath = [baseOutput filesep arrayName];
 
     if ~isdir(basePath)
-        mkdir(basePath)
+        mkdir(basePath);
     end
 
     outFile = [basePath filesep 'calibrationResults.dat'];
@@ -21,12 +21,12 @@ function res = writeCamConfig(cams,arrayName,baseOutput, scaleProps)
         currentCam = cams{ncam};
         Pmat = currentCam.C;
         position = currentCam.T.t'*1000; % write position, converted to mm
-        fprintf(fid, [currentCam.name '\n'])
-        dlmwrite(outFile,Pmat,'-append','Delimiter','\t')
-        dlmwrite(outFile,position,'-append','Delimiter','\t')
+        fprintf(fid, [currentCam.name '\n']);
+        dlmwrite(outFile,Pmat,'-append','Delimiter','\t');
+        dlmwrite(outFile,position,'-append','Delimiter','\t');
     end
 
     fprintf(fid,'0'); % add is refractive = 0 (for pinhole) at end
 
-    fclose(fid)
+    fclose(fid);
 end

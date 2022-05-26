@@ -19,8 +19,7 @@
 %and their initial effort on building a draft for a similar tool.
 
 function [ Im0, Im1, particleMap, flowField ] = generatePIVImagesMultiCam( ...
-          flowParameters, imageProperties, pivParameters, run, cam, arrayName, baseOutput,...
-          displayFlowField, closeFlowField )
+          flowParameters, imageProperties, pivParameters, run, cam, arrayName, baseOutput, occluded, body)
 %generatePIVImages Generates a pair of Synthetic PIV images according to specified
 %paramteres and properties.
 %   flowParameters flow related configuration
@@ -35,8 +34,6 @@ function [ Im0, Im1, particleMap, flowField ] = generatePIVImagesMultiCam( ...
 %   particleMap detailed information about all particles considered for image generation
 %   flowField the instantiated flow field object for computing displacements
 
-addpath functionsLib;
-
 tic();
 
 outFolder = [baseOutput filesep arrayName filesep createPathNameForTestAndConditions( flowParameters, pivParameters )];
@@ -47,7 +44,7 @@ end
 for ncam = 1:length(cam)
     outCamera = [outFolder filesep cam{ncam}.name];
     if ~exist(outCamera, 'dir')
-        mkdir(outCamera)
+        mkdir(outCamera);
     end
 end
 
@@ -78,12 +75,12 @@ disp(['MaxU is ' num2str(max(max(absUs)))]);
 disp(['MaxV is ' num2str(max(max(absVs)))]);
 disp(['Max velocity is ' num2str(max(max(normVs)))]);
 
-if displayFlowField
+if flowParameters.display
     f = figure;
     quiver(x0s(1:10:end, 1:10:end), y0s(1:10:end, 1:10:end), us(1:10:end, 1:10:end), vs(1:10:end, 1:10:end));
     title([flowField.getName() ' - ' 'Noise' num2str(pivParameters.noiseLevel, '%02d') ]);
     saveas(gcf, [ outFolder filesep flowParameters.flowType '_flowField.jpg' ]);
-    if closeFlowField
+    if flowParameters.close
         close(f);
     end
 end
@@ -105,6 +102,18 @@ for ncam = 1:length(cam)
     [Im0] = createCameraImage(pivParameters, imageProperties, particleWorld, cam{ncam});
     [Im1] = createCameraImage(pivParameters, imageProperties, particleWorld2, cam{ncam});
     [Im0, Im1] = adjustImagesIntensity(pivParameters, Im0, Im1);
+
+    if occluded
+        bodyImg = projectBodyPoints(body,cam{ncam});
+
+        for nmesh = 1:length(body.ConnectivityList)
+            indices = body.ConnectivityList(nmesh,:)';
+            region = bodyImg(indices,:);
+            xregion = [region(:,1)' region(1,1)];
+            yregion = [region(:,2)' region(1,2)];
+            %Im0 = regionfill(Im0,xregion,yregion);
+        end
+    end
     
     %Save PIV image
     imwrite(Im0, [outFolder filesep cam{ncam}.name filesep num2str(run, '%02d') '_0.tif']);

@@ -1,4 +1,9 @@
 %This program generates synthetic PIV images and exports validation data.
+%
+% Three-dimensional extension: 2022 Flow Imaging Lab at Mudd (Prof. Leah
+% Mendelson, Zhian Zhou)
+% 
+% Original piv-image generator:
 %Copyright (C) 2019  Luís Mendes, Prof. Rui Ferreira, Prof. Alexandre Bernardino
 %
 %This program is free software; you can redistribute it and/or
@@ -20,6 +25,7 @@
 
 clear *; clear GLOBAL *;
 close all;
+addpath functionsLib;
 
 % specify base path of where to save data
 baseOutput = 'out';
@@ -40,13 +46,15 @@ arrayName = 'twoCam'; % identifier for camera array configuration (used in file 
 
 % vectors of camera positions in m
 showCameras=true; % for debugging camera positions
-xpos = [-0.1 0.1]; 
+%xpos = [-0.1 0.1];
+xpos = [0 0];
 ypos = [0 0];
 zpos = [-0.542 -0.542];
 
 % rotations about each axis in deg
 rx = [0 0];
-ry = [10 -10];
+%ry = [10 -10];
+ry = [0 0];
 rz = [0 0];
 
 % create a cell array of all the cameras
@@ -69,6 +77,13 @@ for ncam = 1:length(xpos)
     end
 end
 
+% configure bodies/surfaces/occlusions
+occluded=true;
+bodyfile = 'Block.stl'; % stl file of body/object
+bodyscale = 0.1; % if stl needs resizing
+bodyPosition = [0 0 10]; % location of body centroid
+
+% display parameters for flow field
 displayFlowField=false; %Display image of each flow field,
 closeFlowField=false; %and close it automatically
 

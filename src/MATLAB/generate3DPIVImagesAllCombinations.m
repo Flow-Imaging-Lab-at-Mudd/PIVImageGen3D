@@ -6,6 +6,18 @@ scaleProps.perpix = scale;
 
 writeCamConfig(cams,arrayName,baseOutput,scaleProps);
 
+% load occlusion
+if occluded
+    tmp = stlread(bodyfile);
+    rescaled = tmp.Points*bodyscale;
+    body.Points = rescaled;
+    body.Centroid = mean(body.Points);
+    shift = bodyPosition - body.Centroid;
+    body.Points = body.Points+shift;
+    body.ConnectivityList = tmp.ConnectivityList;
+end
+
+
 totalCombinations = size(flows, 2)*length(deltaXFactor)*length(bitDepths)* ...
     length(particleRadius)*length(Ni)*length(noiseLevel)*length(winSize)*length(sheetThickness)*numberOfRuns;
 
@@ -39,6 +51,8 @@ for i=1:size(flows, 2)
                                         %linear size (DI). In fact maximum displacement will be 25% of DI.
                                         flowParameters.deltaXFactor = deltaXFactor(deltaXFactorIndex); %deltaX/DI up to 0.25, (0.05, 0.10, 0.25), no interest in 0 displacement
                                         flowParameters.flowType=flows{i};
+                                        flowParameters.display=displayFlowField;
+                                        flowParameters.close=closeFlowField;
             
                                         %dt - 100us - 1000us
                                         pivParameters={};
@@ -81,7 +95,7 @@ for i=1:size(flows, 2)
             
                                         disp(['Generating combination ' num2str(currentCombination) ' of ' num2str(totalCombinations)]);
                                         [~, ~, particleMap, flowField] = generatePIVImagesMultiCam(flowParameters, imageProperties, pivParameters,...
-                                            run, cams, arrayName, baseOutput, displayFlowField, closeFlowField);
+                                            run, cams, arrayName, baseOutput, occluded, body);
                                         currentCombination = currentCombination + 1;
                                     end
                                 end

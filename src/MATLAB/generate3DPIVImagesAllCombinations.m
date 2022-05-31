@@ -8,11 +8,11 @@ writeCamConfig(cams,arrayName,baseOutput,scaleProps);
 
 % load occlusion
 if occluded
-    tmp = stlread(bodyfile);
-    rescaled = tmp.Points*bodyscale;
+    tmp = stlread(body.file);
+    rescaled = tmp.Points*body.scale;
     body.Points = rescaled;
-    body.Centroid = mean(body.Points);
-    shift = bodyPosition - body.Centroid;
+    tmpCentroid = mean(body.Points);
+    shift = body.Position - tmpCentroid;
     body.Points = body.Points+shift;
     body.ConnectivityList = tmp.ConnectivityList;
 end

@@ -46,15 +46,15 @@ arrayName = 'twoCam'; % identifier for camera array configuration (used in file 
 
 % vectors of camera positions in m
 showCameras=true; % for debugging camera positions
-%xpos = [-0.1 0.1];
-xpos = [0 0];
+xpos = [-0.1 0.1];
+%xpos = [0 0];
 ypos = [0 0]; %mvtb appears to use world coordinates y+ down
 zpos = [-0.542 -0.542];
 
-% rotations about each axis in deg
+% camera rotations about each axis in deg
 rx = [0 0];
-%ry = [10 -10];
-ry = [0 0];
+ry = [10 -10];
+%ry = [0 0];
 rz = [0 0];
 
 % create a cell array of all the cameras
@@ -79,10 +79,10 @@ end
 
 % configure bodies/surfaces/occlusions
 occluded=true;
-bodyfile = 'Block.stl'; % stl file of body/object
-bodyscale = 0.1; % if stl needs resizing
-bodyPosition = [0 0 10]; % location of body centroid
-bodyShade = 1; % bright or dark occlusion (1 = bright, 0 = dark)
+body.file = 'Block.stl'; % stl file of body/object
+body.scale = 0.1; % if stl needs resizing
+body.Position = [0 0 10]; % location of body centroid
+body.Shade = 1; % bright or dark occlusion (1 = bright, 0 = dark)
 
 % display parameters for flow field
 displayFlowField=false; %Display image of each flow field,

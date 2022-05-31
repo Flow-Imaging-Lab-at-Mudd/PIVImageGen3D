@@ -82,6 +82,7 @@ occluded=true;
 bodyfile = 'Block.stl'; % stl file of body/object
 bodyscale = 0.1; % if stl needs resizing
 bodyPosition = [0 0 10]; % location of body centroid
+bodyShade = 1; % bright or dark occlusion (1 = bright, 0 = dark)
 
 % display parameters for flow field
 displayFlowField=false; %Display image of each flow field,

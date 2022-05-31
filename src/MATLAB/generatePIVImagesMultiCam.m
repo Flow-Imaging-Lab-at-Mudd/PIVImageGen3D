@@ -106,13 +106,23 @@ for ncam = 1:length(cam)
     if occluded
         bodyImg = projectBodyPoints(body,cam{ncam});
 
+        % preallocate mask
+        msk = logical(zeros(size(Im0)));
+
         for nmesh = 1:length(body.ConnectivityList)
             indices = body.ConnectivityList(nmesh,:)';
             region = bodyImg(indices,:);
-            xregion = [region(:,1)' region(1,1)];
-            yregion = [region(:,2)' region(1,2)];
+            xregion = [region(:,1); region(1,1)];
+            yregion = [region(:,2); region(1,2)];
+            imageVertices = [xregion yregion];
+            currTriangle = drawpolygon('Position',imageVertices);
+            mskTmp = createMask(currTriangle,Im0);
+            msk = or(msk,mskTmp);
             %Im0 = regionfill(Im0,xregion,yregion);
         end
+
+        Im0(msk) = 255; % set occlusion to max brightness for now
+        Im1(msk) = 255; % same occlusion for both frames for now
     end
     
     %Save PIV image and particle positions

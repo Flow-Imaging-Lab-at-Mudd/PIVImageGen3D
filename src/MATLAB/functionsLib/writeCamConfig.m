@@ -22,7 +22,7 @@ function res = writeCamConfig(cams,arrayName,baseOutput, scaleProps)
         Pmat = currentCam.C;
 
         % invert y to account for coordinate differences
-        Pmat(2,2) = -Pmat(2,2);
+        %Pmat(2,2) = -Pmat(2,2);
         %Pmat(2,4) = -Pmat(2,4); not needed, but probably not working with
         %all rotation possibilities
 

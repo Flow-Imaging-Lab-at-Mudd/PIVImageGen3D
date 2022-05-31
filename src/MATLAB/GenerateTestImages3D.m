@@ -28,7 +28,7 @@ close all;
 addpath functionsLib;
 
 % specify base path of where to save data
-baseOutput = 'outMM';
+baseOutput = 'out';
 
 % configure images and cameras
 sizeX=512; %Image width without margins
@@ -42,21 +42,18 @@ fL = 25; % focal length (in mm)
 % create base camera with shared parameters for all cameras
 camBase = CentralCamera('focal', fL, 'pixel', pixPitch, ...
     'resolution', [sizeX sizeY], 'centre', [sizeX/2 sizeY/2], 'name', 'camBase');
-arrayName = 'twoCam'; % identifier for camera array configuration (used in file path)
+arrayName = 'fourCam'; % identifier for camera array configuration (used in file path)
 
 % vectors of camera positions in m
-showCameras=0; % for debugging camera positions, doesn't look great in mm
-xpos = [-100 100];
-%xpos = [-10 10];
-%xpos = [0 0];
-ypos = [0 0]; %mvtb appears to use world coordinates y+ down
-zpos = [-542 -542];
+showCameras=1; % for debugging camera positions, doesn't look great in mm
+xpos = [-100 100 -100 100];
+ypos = [-100 -100 100 100]; %mvtb appears to use world coordinates y+ down
+zpos = [-542 -542 -542 -542];
 
 % camera rotations about each axis in deg
-rx = [0 0];
-ry = [10 -10];
-%ry = [0 0];
-rz = [0 0];
+rx = [-10 -10 10 10];
+ry = [10 -10 10 -10];
+rz = [0 0 0 0];
 
 % create a cell array of all the cameras
 for ncam = 1:length(xpos)

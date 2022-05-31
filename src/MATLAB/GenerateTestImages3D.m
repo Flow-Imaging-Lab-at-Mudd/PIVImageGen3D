@@ -28,16 +28,16 @@ close all;
 addpath functionsLib;
 
 % specify base path of where to save data
-baseOutput = 'out';
+baseOutput = 'outMM';
 
 % configure images and cameras
 sizeX=512; %Image width without margins
 sizeY=512; %Image height without margins
 scale=7.5*10^-2; % mm per pixel
 
-% use machine vision toolbox to create camera array
-pixPitch = 3.45e-6; % pixel dimension (in m)
-fL = 0.025; % focal length (in m)
+% use machine vision toolbox to create camera array, units of mm throughout
+pixPitch = 3.45e-3; % pixel dimension (in mm)
+fL = 25; % focal length (in mm)
 
 % create base camera with shared parameters for all cameras
 camBase = CentralCamera('focal', fL, 'pixel', pixPitch, ...
@@ -45,11 +45,11 @@ camBase = CentralCamera('focal', fL, 'pixel', pixPitch, ...
 arrayName = 'twoCam'; % identifier for camera array configuration (used in file path)
 
 % vectors of camera positions in m
-showCameras=true; % for debugging camera positions
-xpos = [-0.1 0.1];
+showCameras=0; % for debugging camera positions, doesn't look great in mm
+xpos = [-100 100];
 %xpos = [0 0];
 ypos = [0 0]; %mvtb appears to use world coordinates y+ down
-zpos = [-0.542 -0.542];
+zpos = [-542 -542];
 
 % camera rotations about each axis in deg
 rx = [0 0];
@@ -81,7 +81,7 @@ end
 occluded=true;
 body.file = 'Block.stl'; % stl file of body/object
 body.scale = 0.1; % if stl needs resizing
-body.Position = [0 0 10]; % location of body centroid
+body.Position = [0 -5 10]; % location of body centroid, y+ down right now (image-style coordinates, in mm)
 body.Shade = 1; % bright or dark occlusion (1 = bright, 0 = dark)
 
 % display parameters for flow field

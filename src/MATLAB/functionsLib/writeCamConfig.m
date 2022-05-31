@@ -25,7 +25,7 @@ function res = writeCamConfig(cams,arrayName,baseOutput, scaleProps)
         Pmat(2,2) = -Pmat(2,2);
         Pmat(2,4) = -Pmat(2,4);
 
-        position = currentCam.T.t'*1000; % write position, converted to mm
+        position = currentCam.T.t'; % write position, units are mm
         fprintf(fid, [currentCam.name '\n']);
         dlmwrite(outFile,Pmat,'-append','Delimiter','\t');
         dlmwrite(outFile,position,'-append','Delimiter','\t');

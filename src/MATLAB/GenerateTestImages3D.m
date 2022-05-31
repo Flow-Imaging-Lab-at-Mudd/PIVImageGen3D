@@ -47,6 +47,7 @@ arrayName = 'twoCam'; % identifier for camera array configuration (used in file 
 % vectors of camera positions in m
 showCameras=0; % for debugging camera positions, doesn't look great in mm
 xpos = [-100 100];
+%xpos = [-10 10];
 %xpos = [0 0];
 ypos = [0 0]; %mvtb appears to use world coordinates y+ down
 zpos = [-542 -542];

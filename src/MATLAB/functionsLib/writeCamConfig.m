@@ -8,7 +8,7 @@ function res = writeCamConfig(cams,arrayName,baseOutput, scaleProps)
         mkdir(basePath);
     end
 
-    outFile = [basePath filesep 'calibrationResults.dat'];
+    outFile = [basePath filesep 'calibrationResults1.dat'];
     fid = fopen(outFile,'w');
     fprintf(fid, 'Synthetic Calibration from Image Generator \n');
     fprintf(fid, '0 \n'); % no reprojection error because perfect camera model
@@ -23,7 +23,8 @@ function res = writeCamConfig(cams,arrayName,baseOutput, scaleProps)
 
         % invert y to account for coordinate differences
         Pmat(2,2) = -Pmat(2,2);
-        Pmat(2,4) = -Pmat(2,4);
+        %Pmat(2,4) = -Pmat(2,4); not needed, but probably not working with
+        %all rotation possibilities
 
         position = currentCam.T.t'; % write position, units are mm
         fprintf(fid, [currentCam.name '\n']);

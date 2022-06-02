@@ -31,8 +31,8 @@ addpath functionsLib;
 baseOutput = 'out';
 
 % configure images and cameras
-sizeX=512; %Image width without margins
-sizeY=512; %Image height without margins
+sizeX=1024; %Image width without margins
+sizeY=1024; %Image height without margins
 scale=7.5*10^-2; % mm per pixel
 
 % use machine vision toolbox to create camera array, units of mm throughout
@@ -94,11 +94,11 @@ flows={'rankine_vortex'};
 bitDepths=8; % leave at 8 bits for all tests
 deltaXFactor=0.25; % max. displacement as a fraction of the final window size
 particleRadius=1.5; % in pixels
-Ni=1; % # of particles in each window
+Ni=6; % # of particles in each window
 noiseLevel=0; % turn off noise for now
 outOfPlaneStdDeviation=0; % turn off out of plane motion for now
 numberOfRuns=1; % number of trials with each parameter set to generate
-winSize = [32]; % interrogation window sizes
+winSize = [32]; % interrogation window sizes (final)
 sheetThickness = [30]; % light sheet thickness in mm
 zWinScale = 1; % scale of z interrogation window size relative to x and y (assumed to be same)
 

@@ -3,6 +3,28 @@ if ~exist('arrayName','var')
     error('"arrayName" variable for camera array name must be set.')
 end
 
+% Occlusion input checks
+if occluded
+    if ~isfield(body,'file')
+        error('"body.file" variable for occlusion .stl must be set')
+    end
+
+    if ~isfield(body,'scale')
+        warning('"body.scale" variable for occlusion scale not set. Using default of 1')
+        body.scale=1;
+    end
+
+    if ~isfield(body,'Position')
+        warning('"body.Position" variable not set. Using default of [0 0 0]')
+        body.position=[0 0 0];
+    end
+
+    if ~isfield(body,'Shade')
+        warning('"body.Shade" variable not set. Using default of bright occlusion')
+        body.shade=1;
+    end
+end
+
 % PIV parameter input checks
 if ~exist('baseOutput','var')
     warning('"baseOutput" variable not defined. Using default output path of out/')

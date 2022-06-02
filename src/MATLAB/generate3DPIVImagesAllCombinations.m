@@ -6,7 +6,7 @@ scaleProps.perpix = scale;
 
 writeCamConfig(cams,arrayName,baseOutput,scaleProps);
 
-% load occlusion
+% load occlusion and write occlusion position and mesh to file
 if occluded
     tmp = stlread(body.file);
     rescaled = tmp.Points*body.scale;
@@ -15,8 +15,8 @@ if occluded
     shift = body.Position - tmpCentroid;
     body.Points = body.Points+shift;
     body.ConnectivityList = tmp.ConnectivityList;
+    writeOcclusion(baseOutput,body,arrayName);
 end
-
 
 totalCombinations = size(flows, 2)*length(deltaXFactor)*length(bitDepths)* ...
     length(particleRadius)*length(Ni)*length(noiseLevel)*length(winSize)*length(sheetThickness)*numberOfRuns;

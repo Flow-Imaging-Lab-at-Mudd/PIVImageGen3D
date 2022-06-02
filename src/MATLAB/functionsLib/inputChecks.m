@@ -27,8 +27,8 @@ end
 
 % PIV parameter input checks
 if ~exist('baseOutput','var')
-    warning('"baseOutput" variable not defined. Using default output path of out/')
-    baseOutput = 'out';
+    warning('"baseOutput" variable not defined. Using default output path of ../../out/')
+    baseOutput = '../../out';
 end
 if ~exist('flows','var')
     error('"flows" variable must be set. Defines the flows to generate.');

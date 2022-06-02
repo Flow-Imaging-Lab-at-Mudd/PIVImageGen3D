@@ -28,7 +28,7 @@ close all;
 addpath functionsLib;
 
 % specify base path of where to save data
-baseOutput = 'out';
+baseOutput = '../../out';
 
 % configure images and cameras
 sizeX=1024; %Image width without margins

@@ -105,14 +105,24 @@ for ncam = 1:length(cam)
 
     if occluded
         bodyImg = projectBodyPoints(body,cam{ncam});
-        [Im0,Im1] = overlayBody(body,bodyImg,Im0,Im1);
-
+        
+        % make copies of particle field without occlusion
+        Im0ref = Im0;
+        Im1ref = Im1; 
+        [Im0,Im1,msk] = overlayBody(body,bodyImg,Im0,Im1);
+    
     end
     
     %Save PIV image and particle positions
     imwrite(Im0, [outFolder filesep cam{ncam}.name filesep num2str(run, '%02d') '_0.tif']);
     imwrite(Im1, [outFolder filesep cam{ncam}.name filesep  num2str(run, '%02d') '_1.tif']);
-        
+    
+    if occluded
+        imwrite(Im0ref, [outFolder filesep cam{ncam}.name filesep num2str(run, '%02d') '_0_part.tif']);
+        imwrite(Im1ref, [outFolder filesep cam{ncam}.name filesep num2str(run, '%02d') '_1_part.tif']);
+        imwrite(msk, [outFolder filesep cam{ncam}.name filesep num2str(run, '%02d') '_msk.tif']);
+    end
+    
     toc();
     disp('--------------------------------------------------------')
 end

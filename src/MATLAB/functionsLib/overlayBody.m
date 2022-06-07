@@ -1,4 +1,4 @@
-function [Im0,Im1] = overlayBody(body,bodyImg,Im0,Im1)
+function [Im0,Im1,msk] = overlayBody(body,bodyImg,Im0,Im1)
 
 %OVERLAYBODY Overlays mask on synthetic image
 

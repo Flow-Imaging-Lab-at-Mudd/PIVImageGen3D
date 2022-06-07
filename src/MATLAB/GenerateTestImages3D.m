@@ -3,7 +3,7 @@
 % Three-dimensional extension: 2022 Flow Imaging Lab at Mudd (Prof. Leah
 % Mendelson, Zhian Zhou)
 % 
-% Original piv-imageEr:
+% Original piv-image-generator:
 %Copyright (C) 2019  Luís Mendes, Prof. Rui Ferreira, Prof. Alexandre Bernardino
 %
 %This program is free software; you can redistribute it and/or

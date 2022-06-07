@@ -71,7 +71,9 @@ function [ Ivol ] = renderParticles3D(pivParameters, imageProperties, particleMa
     rightMargin = ceil(imageProperties.sizeX - imageProperties.marginsX/2);
     topMargin = ceil(imageProperties.marginsY/2);
     bottomMargin = ceil(imageProperties.sizeY - imageProperties.marginsY/2);
+    frontMargin = ceil(imageProperties.marginsZ/2);
+    backMargin = ceil(imageProperties.voxPerSheet - imageProperties.marginsZ/2);
 
-    Ivol = Ivol(topMargin+1:bottomMargin, leftMargin+1:rightMargin,:);
+    Ivol = Ivol(topMargin+1:bottomMargin, leftMargin+1:rightMargin,frontMargin+1:backMargin);
 end
 

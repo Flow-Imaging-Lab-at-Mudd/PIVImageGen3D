@@ -33,7 +33,7 @@ function [ flowField, particleMap ] = createParticles(flowParameters, pivParamet
 
     numberIAsX = (imageProperties.sizeX - imageProperties.marginsX) / pivParameters.lastWindow(2);
     numberIAsY = (imageProperties.sizeY - imageProperties.marginsY) / pivParameters.lastWindow(1);
-    numberIAsZ = floor(imageProperties.voxPerSheet / pivParameters.lastWindow(3)); % round down for now, address with margin later
+    numberIAsZ = (imageProperties.voxPerSheet- imageProperties.marginsZ) / pivParameters.lastWindow(3); % round down for now, address with margin later
 
     particleMap = {};
     %particleMap.IAs = [numberIAsY, numberIAsX];

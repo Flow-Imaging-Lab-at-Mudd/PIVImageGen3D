@@ -108,3 +108,7 @@ end
 if mod(sizeY,winSize)~=0
     error('Image size must be divisible by final window size');
 end
+
+if mod(sheetThickness/scale,winSize)~=0
+    error('Light sheet thickness must be divisible by final window size');
+end

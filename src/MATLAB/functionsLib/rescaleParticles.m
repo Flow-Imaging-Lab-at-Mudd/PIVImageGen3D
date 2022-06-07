@@ -27,10 +27,11 @@ function [particleWorld] = rescaleParticles(particleMap, imageProperties)
 % calculate shifts in pixels
     shiftx = imageProperties.sizeX/2;
     shifty = imageProperties.sizeY/2;
+    shiftz = ceil(imageProperties.marginsZ/2);
 
     particleWorld.x = ([particleMap.allParticles.x]'-shiftx)*(imageProperties.mmPerPixel);
     particleWorld.y = ([particleMap.allParticles.y]'-shifty)*(imageProperties.mmPerPixel);
-    particleWorld.z = [particleMap.allParticles.z]'*(imageProperties.mmPerPixel);
+    particleWorld.z = ([particleMap.allParticles.z]'-shiftz)*(imageProperties.mmPerPixel);
     particleWorld.intensityA = [particleMap.allParticles.intensityA]';
     particleWorld.intensityB = [particleMap.allParticles.intensityB]';
 end

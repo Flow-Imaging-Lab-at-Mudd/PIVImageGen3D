@@ -99,7 +99,7 @@ noiseLevel=0; % turn off noise for now
 outOfPlaneStdDeviation=0; % turn off out of plane motion for now
 numberOfRuns=1; % number of trials with each parameter set to generate
 winSize = [32]; % interrogation window sizes (final)
-sheetThickness = [30]; % light sheet thickness in mm
+sheetThickness = [24]; % light sheet thickness in mm
 zWinScale = 1; % scale of z interrogation window size relative to x and y (assumed to be same)
 
 generate3DPIVImagesAllCombinations;

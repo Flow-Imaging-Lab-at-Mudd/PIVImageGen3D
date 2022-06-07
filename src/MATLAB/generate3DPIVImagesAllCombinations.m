@@ -77,15 +77,18 @@ for i=1:size(flows, 2)
                                                                              %of their respective Interrogation Area
             
                                         imageProperties={};
-                                        imageProperties.marginsX=2*pivParameters.lastWindow(2);
-                                        imageProperties.marginsY=2*pivParameters.lastWindow(1);
-                                        imageProperties.marginsZ=2*pivParameters.lastWindow(3);
+%                                         imageProperties.marginsX=2*pivParameters.lastWindow(2);
+%                                         imageProperties.marginsY=2*pivParameters.lastWindow(1);
+%                                         imageProperties.marginsZ=2*pivParameters.lastWindow(3);
+
+                                        imageProperties.marginsX=0;
+                                        imageProperties.marginsY=0;
+                                        imageProperties.marginsZ=0;
+
                                         imageProperties.sizeX=sizeX + imageProperties.marginsX;
                                         imageProperties.sizeY=sizeY + imageProperties.marginsY;
 
-                                        imageProperties.mmPerPixel=scale;%For 1.5px particle radius and aprox. 512x512 area size
-                                        %Adjust scale conversion based on particle size
-                                        %imageProperties.mmPerPixel=imageProperties.mmPerPixel * pivParameters.particleRadius / 1.5;
+                                        imageProperties.mmPerPixel=scale;
                                         imageProperties.voxPerSheet=pivParameters.laserSheetThickness / imageProperties.mmPerPixel + imageProperties.marginsZ;
             
                                         DI = single(pivParameters.lastWindow(1)) * imageProperties.mmPerPixel;

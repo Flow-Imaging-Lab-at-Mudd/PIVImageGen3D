@@ -72,13 +72,13 @@ function [ flowField, particleMap ] = createParticles(flowParameters, pivParamet
     particleMap.pivMap = cell(numberIAsY+2, numberIAsX+2);
     particleMap.exactMap = zeros(numberIAsY+2, numberIAsX+2);
 
-    if (numberIAsX + 2)*pivParameters.lastWindow(2) > imageProperties.sizeX
-        error('Margins are not wide enough');
-    end
-
-    if (numberIAsY + 2)*pivParameters.lastWindow(1) > imageProperties.sizeY
-        error('Margins are not tall enough');
-    end
+%     if (numberIAsX + 2)*pivParameters.lastWindow(2) > imageProperties.sizeX
+%         error('Margins are not wide enough');
+%     end
+% 
+%     if (numberIAsY + 2)*pivParameters.lastWindow(1) > imageProperties.sizeY
+%         error('Margins are not tall enough');
+%     end
 
     maxDisp = 0;     
     if pivParameters.noMoveOutOfIA

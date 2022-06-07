@@ -76,7 +76,7 @@ for ncam = 1:length(xpos)
 end
 
 % configure bodies/surfaces/occlusions
-occluded=true;
+occluded=0; % true = occluded, false = no occlusion
 body.file = 'Block.stl'; % stl file of body/object
 body.scale = 0.1; % if stl needs resizing
 body.Position = [0 -5 10]; % location of body centroid, y+ down right now (image-style coordinates, in mm)
@@ -93,7 +93,7 @@ flows={'rankine_vortex'};
 % configure PIV
 bitDepths=8; % leave at 8 bits for all tests
 deltaXFactor=0.25; % max. displacement as a fraction of the final window size
-particleRadius=1.5; % in pixels
+particleRadius=2.5; % in pixels
 Ni=1; % # of particles in each window
 noiseLevel=0; % turn off noise for now
 outOfPlaneStdDeviation=0; % turn off out of plane motion for now

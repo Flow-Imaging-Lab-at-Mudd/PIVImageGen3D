@@ -66,5 +66,12 @@ function [ Ivol ] = renderParticles3D(pivParameters, imageProperties, particleMa
        end
 
    end
+
+    leftMargin = ceil(imageProperties.marginsX/2);
+    rightMargin = ceil(imageProperties.sizeX - imageProperties.marginsX/2);
+    topMargin = ceil(imageProperties.marginsY/2);
+    bottomMargin = ceil(imageProperties.sizeY - imageProperties.marginsY/2);
+
+    Ivol = Ivol(topMargin+1:bottomMargin, leftMargin+1:rightMargin,:);
 end
 

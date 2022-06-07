@@ -85,7 +85,7 @@ for i=1:size(flows, 2)
 
                                         imageProperties.mmPerPixel=scale;%For 1.5px particle radius and aprox. 512x512 area size
                                         %Adjust scale conversion based on particle size
-                                        imageProperties.mmPerPixel=imageProperties.mmPerPixel * pivParameters.particleRadius / 1.5;
+                                        %imageProperties.mmPerPixel=imageProperties.mmPerPixel * pivParameters.particleRadius / 1.5;
                                         imageProperties.voxPerSheet=pivParameters.laserSheetThickness / imageProperties.mmPerPixel + imageProperties.marginsZ;
             
                                         DI = single(pivParameters.lastWindow(1)) * imageProperties.mmPerPixel;

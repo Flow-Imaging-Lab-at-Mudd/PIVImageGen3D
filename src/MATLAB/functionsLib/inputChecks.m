@@ -3,6 +3,15 @@ if ~exist('arrayName','var')
     error('"arrayName" variable for camera array name must be set.')
 end
 
+if ~saveMultCal
+    warning('Saving multiple camera combinations disabled. Using default of all cameras.')
+    camCombos = {[1:length(cams)]};
+end
+
+if ~exist('camCombos','var')
+    error('"camCombos" variable must be set or "saveMultCal" must = 0')
+end
+
 % Occlusion input checks
 if occluded
     if ~isfield(body,'file')

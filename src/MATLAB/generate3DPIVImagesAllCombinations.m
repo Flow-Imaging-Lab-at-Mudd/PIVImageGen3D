@@ -4,7 +4,7 @@ scaleProps.X = sizeX;
 scaleProps.Y = sizeY;
 scaleProps.perpix = scale;
 
-writeCamConfig(cams,arrayName,baseOutput,scaleProps);
+writeCamConfig(cams,arrayName,baseOutput,scaleProps,camCombos);
 
 % load occlusion and write occlusion position and mesh to file
 if occluded

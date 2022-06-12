@@ -55,7 +55,13 @@ rx = [-10 -10 10 10];
 ry = [10 -10 10 -10];
 rz = [0 0 0 0];
 
-% create a cell array of all the cameras
+saveMultCal = 0; % enable to save calibration files for multiple combinations of cameras
+% disable to save one calibration file containing all cameras
+camCombos = {[1,2,3,4],...
+            [1,2,3],...
+            [2,3,4]}; % cell array containing each separate combination of cameras to save
+
+% create a cell array of all the cameras (to do: move out of config file)
 for ncam = 1:length(xpos)
     % rotation matrices
     rxm = rotx(rx(ncam));

@@ -3,12 +3,17 @@
 function res = writeCamConfig(cams,arrayName,baseOutput, scaleProps)
 
     basePath = [baseOutput filesep arrayName];
+    calPath = [basePath filesep 'calibration_results'];
 
     if ~isdir(basePath)
         mkdir(basePath);
     end
 
-    outFile = [basePath filesep 'calibrationResults1.dat'];
+    if ~isdir(calPath)
+        mkdir(calPath);
+    end
+
+    outFile = [calPath filesep 'calibrationResults1.dat'];
     fid = fopen(outFile,'w');
     fprintf(fid, 'Synthetic Calibration from Image Generator \n');
     fprintf(fid, '0 \n'); % no reprojection error because perfect camera model

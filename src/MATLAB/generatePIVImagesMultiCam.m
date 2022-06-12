@@ -36,9 +36,16 @@ function [ Im0, Im1, particleMap, flowField ] = generatePIVImagesMultiCam( ...
 
 tic();
 
-outFolder = [baseOutput filesep arrayName filesep createPathNameForTestAndConditions( flowParameters, pivParameters )];
+%outFolder = [baseOutput filesep arrayName filesep createPathNameForTestAndConditions( flowParameters, pivParameters )];
+outFolder = [baseOutput filesep arrayName filesep 'data'];
+metaFolder = [baseOutput filesep arrayName filesep 'eval']; % folder for metadata and evaluation data
+
 if ~exist(outFolder, 'dir')
     mkdir(outFolder);
+end
+
+if ~exist(metaFolder, 'dir')
+    mkdir(metaFolder);
 end
 
 for ncam = 1:length(cam)
@@ -87,7 +94,7 @@ end
 
 % move export earlier - probably don't need everything exported but leaving
 % for now
-exportFlowFields(flowParameters, pivParameters, imageProperties, particleMap, flowField, outFolder, run);
+exportFlowFields(flowParameters, pivParameters, imageProperties, particleMap, flowField, metaFolder, run);
 
 particleMap2 = displaceParticles(particleMap, flowField);
 
@@ -131,7 +138,8 @@ end
 [Ivol2] = renderParticles3D(pivParameters, imageProperties, particleMap2);
 [Ivol1,Ivol2] = adjustImagesIntensity(pivParameters,Ivol1,Ivol2); % same adjustment function works
 
-save([outFolder filesep 'particles' num2str(run, '%02d') '.mat'],'particleMap','particleWorld','particleMap2','particleWorld2','Ivol1','Ivol2');
+save([metaFolder filesep 'particles' num2str(run, '%02d') '.mat'],'particleMap','particleWorld','particleMap2','particleWorld2','Ivol1','Ivol2');
+save([metaFolder filesep 'settings.mat'],'pivParameters','flowParameters','imageProperties');
 
 end
 

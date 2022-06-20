@@ -94,7 +94,8 @@ closeFlowField=false; %and close it automatically
 
 %flows={'rk_uniform' 'rankine_vortex' 'parabolic' 'uniform' 'stagnation',...
 %        'shear', 'shear_22d3', 'shear_45d0', 'decaying_vortex'};
-flows={'rankine_vortex'};
+%flows={'rankine_vortex'};
+flows={'vortex_ring'};
 
 % configure PIV
 bitDepths=8; % leave at 8 bits for all tests

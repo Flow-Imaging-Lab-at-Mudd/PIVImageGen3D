@@ -53,6 +53,14 @@ for i=1:size(flows, 2)
                                         flowParameters.flowType=flows{i};
                                         flowParameters.display=displayFlowField;
                                         flowParameters.close=closeFlowField;
+
+                                        if strcmp(flows{i},'vortex_ring')
+                                            flowParameters.dimField(i) = 3; 
+                                        else
+                                            flowParameters.dimField(i) = 2; % dimensions of velocity field
+                                        end
+                                   
+
             
                                         %dt - 100us - 1000us
                                         pivParameters={};

@@ -67,7 +67,8 @@ disp(['Generating flow: ' flowField.getName()])
 disp(['to: ' outFolder]);
 disp(['dt=' num2str(flowParameters.dt)]);
 
-if flowParameters.dimField == 2
+switch flowParameters.dimField
+    case 2
     [flowField, particleMap] = createParticles(flowParameters, pivParameters, imageProperties, flowField);
     
     [x0s, y0s] = meshgrid(0:imageProperties.sizeX-1,0:imageProperties.sizeY-1);
@@ -83,7 +84,7 @@ if flowParameters.dimField == 2
     disp(['MaxV is ' num2str(max(max(absVs)))]);
     disp(['Max velocity is ' num2str(max(max(normVs)))]);
 
-elseif flowParameters.dimField == 3
+    case 3
     [flowField, particleMap] = createParticles(flowParameters, pivParameters, imageProperties, flowField);
     
     [x0s, y0s, z0s] = meshgrid(0:imageProperties.sizeX-1,0:imageProperties.sizeY-1, 0:imageProperties.voxPerSheet-1);
@@ -103,9 +104,17 @@ end
 
 if flowParameters.display
     f = figure;
-    quiver(x0s(1:10:end, 1:10:end), y0s(1:10:end, 1:10:end), us(1:10:end, 1:10:end), vs(1:10:end, 1:10:end));
+    
+    switch flowParameters.dimField
+        case 2
+            quiver(x0s(1:10:end, 1:10:end), y0s(1:10:end, 1:10:end), us(1:10:end, 1:10:end), vs(1:10:end, 1:10:end));
+        case 3
+            skip = 20;
+            quiver3(x0s(1:skip:end, 1:skip:end, 1:skip:end), y0s(1:skip:end, 1:skip:end, 1:skip:end), z0s(1:skip:end, 1:skip:end, 1:skip:end), us(1:skip:end, 1:skip:end, 1:skip:end), vs(1:skip:end, 1:skip:end, 1:skip:end), ws(1:skip:end, 1:skip:end, 1:skip:end));
+    end
+    
     title([flowField.getName() ' - ' 'Noise' num2str(pivParameters.noiseLevel, '%02d') ]);
-    saveas(gcf, [ outFolder filesep flowParameters.flowType '_flowField.jpg' ]);
+    %saveas(gcf, [ outFolder filesep flowParameters.flowType '_flowField.jpg' ]);
     if flowParameters.close
         close(f);
     end

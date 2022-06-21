@@ -35,7 +35,7 @@ classdef VortexRingFlow
         circulation
         dt
         Weight = 1.0;
-        coreRadius = 75.0;
+        coreRadius = 50.0;
         majRadius = 150.0;
     end
     methods
@@ -57,29 +57,38 @@ classdef VortexRingFlow
         
         function [ x1, y1, z1 ] = computeDisplacementAtImagePosition(obj, x0, y0, z0)           
             R=sqrt((x0 - obj.xc).^2 + (z0 - obj.zc).^2);
+            %r = abs(R - obj.majRadius);
+            rplane = R - obj.majRadius;
+            r = sqrt(rplane.^2 + (y0-obj.yc).^2);
             phi0 = atan2((z0 - obj.zc),(x0 - obj.xc));
-            theta0=atan2((y0 - obj.yc),r);
+            theta0=atan2((y0 - obj.yc),rplane);
             
             x1 = zeros(size(x0,1), size(x0,2), size(x0,3));
             y1 = zeros(size(x0,1), size(x0,2), size(x0,3));
             z1 = zeros(size(x0,1), size(x0,2), size(x0,3));
+            r1 = zeros(size(x0,1), size(x0,2), size(x0,3));
             
             %Inside the forced Vortex Radius            
-            if ~isempty(r(r <= obj.Radius))
-               theta1 = obj.Weight .* obj.circulation .* obj.dt + theta0(r <= obj.Radius);
-               x1(r <= obj.Radius) = r(r <= obj.Radius) .* cos(theta1);
-               y1(r <= obj.Radius) = r(r <= obj.Radius) .* sin(theta1);
+            if ~isempty(r(r <= obj.coreRadius))
+               theta1 = obj.Weight .* obj.circulation .* obj.dt + theta0(abs(r) <= obj.coreRadius);
+               r1(abs(r) <= obj.coreRadius) = r(abs(r) <= obj.coreRadius) .* cos(theta1);
+               y1(abs(r) <= obj.coreRadius) = r(abs(r) <= obj.coreRadius) .* sin(theta1);
             end
             
             %Outside the forced Vortex Radius (free vortex)            
-            if ~isempty(r(r > obj.Radius))
-               theta1 = obj.Weight .* obj.circulation .* obj.dt .* obj.Radius^2 ./ r(r > obj.Radius).^2 + theta0(r > obj.Radius);
-               x1(r > obj.Radius) = r(r > obj.Radius) .* cos(theta1);
-               y1(r > obj.Radius) = r(r > obj.Radius) .* sin(theta1);
+            if ~isempty(r(r > obj.coreRadius))
+               theta1 = obj.Weight .* obj.circulation .* obj.dt .* obj.coreRadius^2 ./ r(abs(r) > obj.coreRadius).^2 + theta0(abs(r) > obj.coreRadius);
+               r1(abs(r) > obj.coreRadius) = r(abs(r) > obj.coreRadius) .* cos(theta1);
+               y1(abs(r) > obj.coreRadius) = r(abs(r) > obj.coreRadius) .* sin(theta1);
             end
+
+            %Handle axisymmetry (no velocity in phi direction)
+            x1 = (r1+obj.majRadius).*cos(phi0);
+            z1 = (r1+obj.majRadius).*sin(phi0);
             
             x1 = x1 + obj.xc;
-            y1 = y1 + obj.yc;    
+            y1 = y1 + obj.yc;
+            z1 = z1 + obj.zc;
         end
         
         function [name] = getName(~) 

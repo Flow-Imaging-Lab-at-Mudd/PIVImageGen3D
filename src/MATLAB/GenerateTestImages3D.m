@@ -89,7 +89,7 @@ body.Position = [0 -5 10]; % location of body centroid, y+ down right now (image
 body.Shade = 1; % bright or dark occlusion (1 = bright, 0 = dark)
 
 % display parameters for flow field
-displayFlowField=false; %Display image of each flow field,
+displayFlowField=true; %Display image of each flow field,
 closeFlowField=false; %and close it automatically
 
 %flows={'rk_uniform' 'rankine_vortex' 'parabolic' 'uniform' 'stagnation',...

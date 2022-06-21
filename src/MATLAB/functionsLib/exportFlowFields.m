@@ -23,6 +23,9 @@ function [ ] = exportFlowFields(flowParameters, pivParameters, imageProperties, 
 %validation purposes, along with statistical information and initial configurations.
 %   Data is exported to a .MAT file.
 
+switch flowParameters.dimField
+    case 2
+
     [U_OptFlow, V_OptFlow] = computeExactOpticalFlowField(imageProperties, flowField);
     [U_PIV_est, V_PIV_est] = computeEstimatedPIVFlowField(pivParameters, imageProperties, particleMap, flowField);
     [FiIns, FiOuts, FoIns, FoOuts, commonParticles, Rds] = computeFiFoAndRd(pivParameters, imageProperties, particleMap, flowField);
@@ -63,7 +66,31 @@ function [ ] = exportFlowFields(flowParameters, pivParameters, imageProperties, 
     pivStatistics.FoOuts = single(FoOuts);
     pivStatistics.Rds = single(Rds);
     pivStatistics.commonParticles = single(commonParticles);
-    
+
     save([outFolder filesep flowParameters.flowType '_run' num2str(run, '%02d') '_validation.mat'], 'imageProperties', 'pivParameters', 'flowParameters', 'exactOpticalFlowDisplacements', 'estimatedPIVDisplacements', 'pivStatistics');
+
+    case 3
+        [U_PIV_est, V_PIV_est, W_PIV_est] = computeEstimated3DPIVFlowField(pivParameters, imageProperties, particleMap, flowField);
+            
+    %
+        estimatedPIVDisplacements={};
+        estimatedPIVDisplacements.iaWidth=pivParameters.lastWindow(2);
+        estimatedPIVDisplacements.iaHeight=pivParameters.lastWindow(1);
+        estimatedPIVDisplacements.iaDepth=pivParameters.lastWindow(3);
+        estimatedPIVDisplacements.u = single(U_PIV_est);
+        estimatedPIVDisplacements.v = single(V_PIV_est);
+        estimatedPIVDisplacements.w = single(W_PIV_est);
+        estimatedPIVDisplacements.margins={};
+        estimatedPIVDisplacements.margins.top=0;
+        estimatedPIVDisplacements.margins.left=0;
+        estimatedPIVDisplacements.margins.bottom=0;
+        estimatedPIVDisplacements.margins.right=0;
+        estimatedPIVDisplacements.parameters={};
+        estimatedPIVDisplacements.parameters.overlapFactor=1.0;
+
+        save([outFolder filesep flowParameters.flowType '_run' num2str(run, '%02d') '_validation.mat'], 'imageProperties', 'pivParameters', 'flowParameters', 'estimatedPIVDisplacements');
+end
+    
+    
 end
 

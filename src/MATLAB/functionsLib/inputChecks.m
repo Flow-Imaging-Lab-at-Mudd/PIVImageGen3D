@@ -110,6 +110,11 @@ if ~exist('closeFlowField', 'var')
     closeFlowField = true;
 end
 
+if ~exist('singlePart', 'var')
+    warning('singlePart (generate single particle normalization data) not set. Using default value of false');
+    singlePart = false;
+end
+
 if mod(sizeX,winSize)~=0
     error('Image size must be divisible by final window size');
 end

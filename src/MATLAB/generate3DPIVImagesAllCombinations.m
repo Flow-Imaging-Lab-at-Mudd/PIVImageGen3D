@@ -83,6 +83,7 @@ for i=1:size(flows, 2)
                                         pivParameters.outOfPlaneStdDeviation=outOfPlaneStdDeviation(outOfPlaneStdDeviationIndex); %Out of plane velocity standard devitation in mm/frame - (0.025, or 0.05, or 0,10 mm)
                                         pivParameters.noMoveOutOfIA=false;   %Should particles be allowed to move in/out
                                                                              %of their respective Interrogation Area
+                                        pivParameters.singlePart = singlePart; % Whether to bypass seeding setting to generate single particle images for normalization
             
                                         imageProperties={};
 %                                         imageProperties.marginsX=2*pivParameters.lastWindow(2);

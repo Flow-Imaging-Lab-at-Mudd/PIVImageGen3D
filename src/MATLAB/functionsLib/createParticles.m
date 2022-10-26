@@ -31,12 +31,12 @@ function [ flowField, particleMap ] = createParticles(flowParameters, pivParamet
 %   for instance callibrate weight factors for the flow field instances.
 %   particleMap - the particles map. Contains all information about the generated particles.
 
+if ~pivParameters.singlePart
     numberIAsX = (imageProperties.sizeX - imageProperties.marginsX) / pivParameters.lastWindow(2);
     numberIAsY = (imageProperties.sizeY - imageProperties.marginsY) / pivParameters.lastWindow(1);
     numberIAsZ = (imageProperties.voxPerSheet- imageProperties.marginsZ) / pivParameters.lastWindow(3); % round down for now, address with margin later
 
     particleMap = {};
-    %particleMap.IAs = [numberIAsY, numberIAsX];
     particleMap.IAs = [numberIAsY, numberIAsX, numberIAsZ];
     particleMap.pivMap = {};
     particleMap.totalNrParticles = 0;
@@ -201,6 +201,14 @@ function [ flowField, particleMap ] = createParticles(flowParameters, pivParamet
             end       
         end
     end
+
+else
+    particleMap.allParticles(1).x = imageProperties.sizeX/2;
+    particleMap.allParticles(1).y = imageProperties.sizeY/2;
+    particleMap.allParticles(1).z = 0;
+    particleMap.allParticles(1).intensityA = pivParameters.particleIntensityPeak;
+    particleMap.allParticles(1).intensityB = pivParameters.particleIntensityPeak;
+end
 
     if pivParameters.noMoveOutOfIA
         maxObservedVelocity = max(maxU, maxV);

@@ -42,7 +42,7 @@ fL = 25; % focal length (in mm)
 % create base camera with shared parameters for all cameras
 camBase = CentralCamera('focal', fL, 'pixel', pixPitch, ...
     'resolution', [sizeX sizeY], 'centre', [sizeX/2 sizeY/2], 'name', 'camBase');
-arrayName = 'fourCam'; % identifier for camera array configuration (used in file path)
+arrayName = 'fourCamSinglePart'; % identifier for camera array configuration (used in file path)
 
 % vectors of camera positions in m
 showCameras=1; % for debugging camera positions, doesn't look great in mm
@@ -94,8 +94,8 @@ closeFlowField=false; %and close it automatically
 
 %flows={'rk_uniform' 'rankine_vortex' 'parabolic' 'uniform' 'stagnation',...
 %        'shear', 'shear_22d3', 'shear_45d0', 'decaying_vortex'};
-%flows={'rankine_vortex'};
-flows={'vortex_ring'};
+flows={'rankine_vortex'};
+%flows={'vortex_ring'};
 
 % configure PIV
 bitDepths=8; % leave at 8 bits for all tests
@@ -108,5 +108,6 @@ numberOfRuns=1; % number of trials with each parameter set to generate
 winSize = [32]; % interrogation window sizes (final)
 sheetThickness = [24]; % light sheet thickness in mm
 zWinScale = 1; % scale of z interrogation window size relative to x and y (assumed to be same)
+singlePart = 1; % binary, when on generates images of a single particle centered in the volume for normalizing Q
 
 generate3DPIVImagesAllCombinations;

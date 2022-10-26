@@ -122,9 +122,12 @@ end
 
 % move export earlier - probably don't need everything exported but leaving
 % for now
-exportFlowFields(flowParameters, pivParameters, imageProperties, particleMap, flowField, metaFolder, run);
 
-particleMap2 = displaceParticles(particleMap, flowField);
+if ~pivParameters.singlePart
+    exportFlowFields(flowParameters, pivParameters, imageProperties, particleMap, flowField, metaFolder, run);
+end
+
+    particleMap2 = displaceParticles(particleMap, flowField);
 
 % rescale particle positions to mm before projecting into each camera
 % (going through steps in pixels first generates reasonable displacements)

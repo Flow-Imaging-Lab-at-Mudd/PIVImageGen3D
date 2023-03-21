@@ -18,7 +18,7 @@
 %Special thanks go to Ana Margarida and Rui Aleixo
 %and their initial effort on building a draft for a similar tool.
 
-function [particleMapOut] = displaceParticles(particleMap, flowField)
+function [particleMapOut] = displaceParticles(particleMap, flowField, dim)
 
 %   Returns:
 %   Displaced particles for second image in pair, with intensities, in same
@@ -26,15 +26,26 @@ function [particleMapOut] = displaceParticles(particleMap, flowField)
     
     particleMapOut = particleMap;
 
-    for n=1:length(particleMap.allParticles)
-       x = particleMap.allParticles(n).x;
-       y = particleMap.allParticles(n).y;
-       intensityA = particleMap.allParticles(n).intensityA;
-       [x1, y1] = flowField.computeDisplacementAtImagePosition(x, y);
-       displacedX = x1;
-       displacedY = y1;
-       particleMapOut.allParticles(n).x = x1;
-       particleMapOut.allParticles(n).y = y1;
+    switch dim
+        case 2
+            for n=1:length(particleMap.allParticles)
+               x = particleMap.allParticles(n).x;
+               y = particleMap.allParticles(n).y;
+               [x1, y1] = flowField.computeDisplacementAtImagePosition(x, y);
+               particleMapOut.allParticles(n).x = x1;
+               particleMapOut.allParticles(n).y = y1;
+            end
+
+        case 3
+             for n=1:length(particleMap.allParticles)
+               x = particleMap.allParticles(n).x;
+               y = particleMap.allParticles(n).y;
+               z = particleMap.allParticles(n).z;
+               [x1, y1, z1] = flowField.computeDisplacementAtImagePosition(x, y, z);
+               particleMapOut.allParticles(n).x = x1;
+               particleMapOut.allParticles(n).y = y1;
+               particleMapOut.allParticles(n).z = z1;
+            end
     end
         
 end

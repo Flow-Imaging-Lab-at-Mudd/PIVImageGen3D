@@ -95,6 +95,7 @@ switch flowParameters.dimField
     ws = z1s - z0s;
     absUs=abs(us(imageProperties.marginsX/2 + 1:end-imageProperties.marginsX/2,imageProperties.marginsY/2 + 1:end-imageProperties.marginsY/2));
     absVs=abs(vs(imageProperties.marginsX/2 + 1:end-imageProperties.marginsX/2,imageProperties.marginsY/2 + 1:end-imageProperties.marginsY/2));
+    %absWs=abs(ws(imageProperties.marginsX/2 + 1:end-imageProperties.marginsX/2,imageProperties.marginsY/2 + 1:end-imageProperties.marginsY/2));
     normVs=sqrt(us(imageProperties.marginsX/2 + 1:end-imageProperties.marginsX/2,imageProperties.marginsY/2 + 1:end-imageProperties.marginsY/2).^2 + ...
         vs(imageProperties.marginsX/2 + 1:end-imageProperties.marginsX/2,imageProperties.marginsY/2 + 1:end-imageProperties.marginsY/2).^2);
     disp(['MaxU is ' num2str(max(max(absUs)))]);
@@ -109,8 +110,21 @@ if flowParameters.display
         case 2
             quiver(x0s(1:10:end, 1:10:end), y0s(1:10:end, 1:10:end), us(1:10:end, 1:10:end), vs(1:10:end, 1:10:end));
         case 3
-            skip = 20;
+            skip = 25;
+            subplot(1,3,1)
             quiver3(x0s(1:skip:end, 1:skip:end, 1:skip:end), y0s(1:skip:end, 1:skip:end, 1:skip:end), z0s(1:skip:end, 1:skip:end, 1:skip:end), us(1:skip:end, 1:skip:end, 1:skip:end), vs(1:skip:end, 1:skip:end, 1:skip:end), ws(1:skip:end, 1:skip:end, 1:skip:end));
+            axis equal
+
+            subplot(1,3,2)
+            quiver(x0s(1:skip:end, 1:skip:end,round(imageProperties.voxPerSheet/2)), y0s(1:skip:end, 1:skip:end, round(imageProperties.voxPerSheet/2)), ...
+                us(1:skip:end, 1:skip:end,round(imageProperties.voxPerSheet/2)), vs(1:skip:end, 1:skip:end,round(imageProperties.voxPerSheet/2)));
+            axis equal
+
+            subplot(1,3,3)
+            quiver(z0s(1:skip:end, imageProperties.sizeX/2, 1:skip:end), y0s(1:skip:end, imageProperties.sizeX/2, 1:skip:end), ...
+                ws(1:skip:end, imageProperties.sizeX/2,1:skip:end), vs(1:skip:end, imageProperties.sizeX/2, 1:skip:end));
+            axis equal
+
     end
     
     title([flowField.getName() ' - ' 'Noise' num2str(pivParameters.noiseLevel, '%02d') ]);
@@ -127,7 +141,7 @@ if ~pivParameters.singlePart
     exportFlowFields(flowParameters, pivParameters, imageProperties, particleMap, flowField, metaFolder, run);
 end
 
-    particleMap2 = displaceParticles(particleMap, flowField);
+    particleMap2 = displaceParticles(particleMap, flowField, flowParameters.dimField);
 
 % rescale particle positions to mm before projecting into each camera
 % (going through steps in pixels first generates reasonable displacements)

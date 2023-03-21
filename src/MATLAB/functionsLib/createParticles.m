@@ -60,6 +60,7 @@ if ~pivParameters.singlePart
     particle.z = 0;
     particle.intensityA = 0;
     particle.intensityB = 0;
+    particle.intensities = zeros(1,imageProperties.nFrames);
     %Create a border of IAs around the relevant IAs
     totalInPlaneNrParticles = inPlaneParticlesPerIA * (numberIAsX + 2) * (numberIAsY + 2) * (numberIAsZ + 2);
     totalOutOfPlaneParticles = outOfPlaneParticlesPerIA * (numberIAsX + 2) * (numberIAsY + 2);
@@ -97,6 +98,7 @@ if ~pivParameters.singlePart
     
                 %upperX0s = random('unif', winLeft + maxDisp, winLeft + pivParameters.lastWindow(2) - eps - maxDisp, [totalOutOfPlaneParticles/2, 1]);
                 %upperY0s = random('unif', winTop + maxDisp, winTop + pivParameters.lastWindow(1) - eps - maxDisp, [totalOutOfPlaneParticles/2, 1]);
+
                 % why total # of particles for entire field in this loop since
                 % re-generated for each window?
                 x0s = random('unif', winLeft + maxDisp, winLeft + pivParameters.lastWindow(2) - eps - maxDisp, [totalInPlaneNrParticles, 1]);
@@ -121,7 +123,18 @@ if ~pivParameters.singlePart
                 upperIntensitiesB = pivParameters.particleIntensityPeak .* exp(-(upperParticleOutOfPlanePositions+upperParticleOutOfPlaneMovement).^2./(0.125 * pivParameters.laserSheetThickness^2));
                 intensitiesB = pivParameters.particleIntensityPeak .* exp(-(particleOutOfPlanePositions+particleOutOfPlaneMovement).^2./(0.125 * pivParameters.laserSheetThickness^2));
                 lowerIntensitiesB = pivParameters.particleIntensityPeak .* exp(-(lowerParticleOutOfPlanePositions+lowerParticleOutOfPlaneMovement).^2./(0.125 * pivParameters.laserSheetThickness^2));
-    
+
+                for nFi = 1:imageProperties.nFrames
+                    if nFi == 1
+                        intensities(:,nFi) = pivParameters.particleIntensityPeak .* ...
+                            exp(-particleOutOfPlanePositions.^2./(0.125 * pivParameters.laserSheetThickness^2));
+                    else
+                        particleOutOfPlaneMovement = random('norm', 0, pivParameters.outOfPlaneStdDeviation, [totalInPlaneNrParticles, 1]);
+                        intensities(:,nFi) = pivParameters.particleIntensityPeak .* ...
+                            exp(-(particleOutOfPlanePositions+particleOutOfPlaneMovement).^2./(0.125 * pivParameters.laserSheetThickness^2));
+                    end
+                end
+
                 particle.x = 0;
                 particle.y = 0;
                 particle.z = 0;
@@ -138,6 +151,7 @@ if ~pivParameters.singlePart
                         particle.z = z0s(n);
                         particle.intensityA = intensitiesA(n);
                         particle.intensityB = intensitiesB(n);
+                        particle.intensities = intensities(n,:);
                         particle.outOfPlanePosition = particleOutOfPlanePositions(n);
                         particle.outOfPlaneMovement = particleOutOfPlaneMovement(n);
     
@@ -149,6 +163,7 @@ if ~pivParameters.singlePart
                         particleMap.allParticles(index).z = z0s(n);
                         particleMap.allParticles(index).intensityA = intensitiesA(n);                
                         particleMap.allParticles(index).intensityB = intensitiesB(n);
+                        particleMap.allParticles(index).intensities = intensities(n,:);
                         particleMap.allParticles(index).outOfPlanePosition = particleOutOfPlanePositions(n);
                         particleMap.allParticles(index).outOfPlaneMovement = particleOutOfPlaneMovement(n);
                         index = index + 1;

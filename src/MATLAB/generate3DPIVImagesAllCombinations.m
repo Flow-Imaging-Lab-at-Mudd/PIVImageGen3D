@@ -99,6 +99,7 @@ for i=1:size(flows, 2)
 
                                         imageProperties.mmPerPixel=scale;
                                         imageProperties.voxPerSheet=pivParameters.laserSheetThickness / imageProperties.mmPerPixel + imageProperties.marginsZ;
+                                        imageProperties.nFrames = numberOfFrames;
             
                                         DI = single(pivParameters.lastWindow(1)) * imageProperties.mmPerPixel;
                                         dtao = 2.0 * single(pivParameters.particleRadius) * imageProperties.mmPerPixel;

@@ -57,6 +57,7 @@ rz = [0 0 0 0];
 
 saveMultCal = 0; % enable to save calibration files for multiple combinations of cameras
 % disable to save one calibration file containing all cameras
+
 camCombos = {[1,2,3,4],...
             [1,2,3],...
             [2,3,4]}; % cell array containing each separate combination of cameras to save
@@ -94,17 +95,18 @@ closeFlowField=false; %and close it automatically
 
 %flows={'rk_uniform' 'rankine_vortex' 'parabolic' 'uniform' 'stagnation',...
 %        'shear', 'shear_22d3', 'shear_45d0', 'decaying_vortex'};
-%flows={'rankine_vortex'};
-flows={'vortex_ring'};
+flows={'rankine_vortex'};
+%flows={'vortex_ring'};
 
 % configure PIV
 bitDepths=8; % leave at 8 bits for all tests
 deltaXFactor=0.25; % max. displacement as a fraction of the final window size
 particleRadius=2.5; % in pixels
-Ni=1; % # of particles in each window
+Ni=2; % # of particles in each window
 noiseLevel=0; % turn off noise for now
 outOfPlaneStdDeviation=0; % turn off out of plane motion for now
 numberOfRuns=1; % number of trials with each parameter set to generate
+numberOfFrames = 4; % number of frames to generate in each image sequence (minimum 2 for PIV, minimum 4 for PTV)
 winSize = [32]; % interrogation window sizes (final)
 sheetThickness = [24]; % light sheet thickness in mm
 zWinScale = 1; % scale of z interrogation window size relative to x and y (assumed to be same)

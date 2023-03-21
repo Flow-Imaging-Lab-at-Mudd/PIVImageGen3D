@@ -18,7 +18,7 @@
 %Special thanks go to Ana Margarida and Rui Aleixo
 %and their initial effort on building a draft for a similar tool.
 
-function [particleWorld] = rescaleParticles(particleMap, imageProperties)
+function [particleWorld] = rescaleParticles(particleMap, imageProperties, dim)
     
 %   Returns:
 %   Particle positions rescaled to mm instead of voxel units and with
@@ -29,9 +29,20 @@ function [particleWorld] = rescaleParticles(particleMap, imageProperties)
     shifty = imageProperties.sizeY/2;
     shiftz = ceil(imageProperties.marginsZ/2);
 
-    particleWorld.x = ([particleMap.allParticles.x]'-shiftx)*(imageProperties.mmPerPixel);
-    particleWorld.y = ([particleMap.allParticles.y]'-shifty)*(imageProperties.mmPerPixel);
-    particleWorld.z = ([particleMap.allParticles.z]'-shiftz)*(imageProperties.mmPerPixel);
-    particleWorld.intensityA = [particleMap.allParticles.intensityA]';
-    particleWorld.intensityB = [particleMap.allParticles.intensityB]';
+    xAll = reshape([particleMap.allParticles.x],[],imageProperties.nFrames);
+    yAll = reshape([particleMap.allParticles.y],[],imageProperties.nFrames);
+
+    switch dim
+        case 2
+            zAll = [particleMap.allParticles.z]';
+        case 3
+            zAll = reshape([particleMap.allParticles.z],[],imageProperties.nFrames);
+    end
+
+    particleWorld.x = (xAll-shiftx)*(imageProperties.mmPerPixel);
+    particleWorld.y = (yAll-shifty)*(imageProperties.mmPerPixel);
+    particleWorld.z = (zAll-shiftz)*(imageProperties.mmPerPixel);
+    %particleWorld.intensityA = [particleMap.allParticles.intensityA
+    %particleWorld.intensityB = [particleMap.allParticles.intensityB]';
+    particleWorld.intensities = reshape([particleMap.allParticles.intensities],[],imageProperties.nFrames);
 end

@@ -142,11 +142,13 @@ if ~pivParameters.singlePart
 end
 
     particleMap2 = displaceParticles(particleMap, flowField, flowParameters.dimField);
+    particleMapMulti = displaceParticlesMulti(particleMap, flowField, flowParameters.dimField, imageProperties.nFrames);
 
 % rescale particle positions to mm before projecting into each camera
 % (going through steps in pixels first generates reasonable displacements)
-particleWorld = rescaleParticles(particleMap,imageProperties);
-particleWorld2 = rescaleParticles(particleMap2,imageProperties);
+%particleWorld = rescaleParticles(particleMap,imageProperties);
+%particleWorld2 = rescaleParticles(particleMap2,imageProperties);
+particleWorldMulti = rescaleParticles(particleMapMulti,imageProperties, flowParameters.dimField);
 
 
 % loop over all multi cameras and save images

@@ -18,14 +18,14 @@
 %Special thanks go to Ana Margarida and Rui Aleixo
 %and their initial effort on building a draft for a similar tool.
 
-function [Im0, Im1] = adjustImagesIntensity(pivParameters, Im0, Im1)
+function [Imstack] = adjustImagesIntensity(pivParameters, Imstack)
 %adjustImagesIntensity Adjust images intensity by either clipping
 %   or normalizing, based on allowed maximum pixel bit depth.
 
 maxValue = 2^pivParameters.bits-1;
 switch pivParameters.intensityMethod   
     case 'normalize'
-        maxI = max(max(max(Im0)),max(max(Im1)));        
+        maxI = max(Imstack(:));        
         if maxI > maxValue 
            Im0 = Im0 .* maxValue ./ maxI;
            Im1 = Im1 .* maxValue ./ maxI;
@@ -34,23 +34,20 @@ switch pivParameters.intensityMethod
         Im0 = round(Im0);
         Im1 = round(Im1);
     case 'clip'
-        Im0 = round(Im0);
-        Im1 = round(Im1);
+        Imstack = round(Imstack);
 
-        Im0(Im0>maxValue) = maxValue;
-        Im1(Im1>maxValue) = maxValue;               
+        Imstack(Imstack>maxValue) = maxValue;
+             
     otherwise
         error('Unknown intensity method');
 end
 
 if pivParameters.bits == 8
-    Im0 = uint8(Im0);
-    Im1 = uint8(Im1);
+    Imstack = uint8(Imstack);
+
 else
-    Im0(Im0 > maxValue) = maxValue;
-    Im1(Im1 > maxValue) = maxValue;
-    Im0 = uint16(Im0);
-    Im1 = uint16(Im1);
+    Imstack(Imstack > maxValue) = maxValue;
+    Imstack = uint16(Imstack);
 end
 end
 

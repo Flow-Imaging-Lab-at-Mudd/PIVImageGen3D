@@ -29,12 +29,13 @@ function [particleWorld] = rescaleParticles(particleMap, imageProperties, dim)
     shifty = imageProperties.sizeY/2;
     shiftz = ceil(imageProperties.marginsZ/2);
 
-    xAll = reshape([particleMap.allParticles.x],[],imageProperties.nFrames);
-    yAll = reshape([particleMap.allParticles.y],[],imageProperties.nFrames);
+    xAll = reshape([particleMap.allParticles.x],imageProperties.nFrames,[])';
+    yAll = reshape([particleMap.allParticles.y],imageProperties.nFrames,[])';
 
     switch dim
         case 2
             zAll = [particleMap.allParticles.z]';
+            zAll = repmat(zAll, 1, imageProperties.nFrames);
         case 3
             zAll = reshape([particleMap.allParticles.z],[],imageProperties.nFrames);
     end
@@ -44,5 +45,5 @@ function [particleWorld] = rescaleParticles(particleMap, imageProperties, dim)
     particleWorld.z = (zAll-shiftz)*(imageProperties.mmPerPixel);
     %particleWorld.intensityA = [particleMap.allParticles.intensityA
     %particleWorld.intensityB = [particleMap.allParticles.intensityB]';
-    particleWorld.intensities = reshape([particleMap.allParticles.intensities],[],imageProperties.nFrames);
+    particleWorld.intensities = reshape([particleMap.allParticles.intensities],imageProperties.nFrames,[])';
 end

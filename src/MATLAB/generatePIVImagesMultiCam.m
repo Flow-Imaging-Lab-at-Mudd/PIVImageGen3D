@@ -18,7 +18,7 @@
 %Special thanks go to Ana Margarida and Rui Aleixo
 %and their initial effort on building a draft for a similar tool.
 
-function [ Im0, Im1, particleMap, flowField ] = generatePIVImagesMultiCam( ...
+function [ IvolMulti particleMapMulti, flowField ] = generatePIVImagesMultiCam( ...
           flowParameters, imageProperties, pivParameters, run, cam, arrayName, baseOutput, occluded, body)
 %generatePIVImages Generates a pair of Synthetic PIV images according to specified
 %paramteres and properties.
@@ -140,52 +140,50 @@ end
 if ~pivParameters.singlePart
     exportFlowFields(flowParameters, pivParameters, imageProperties, particleMap, flowField, metaFolder, run);
 end
-
-    particleMap2 = displaceParticles(particleMap, flowField, flowParameters.dimField);
     particleMapMulti = displaceParticlesMulti(particleMap, flowField, flowParameters.dimField, imageProperties.nFrames);
 
 % rescale particle positions to mm before projecting into each camera
 % (going through steps in pixels first generates reasonable displacements)
-%particleWorld = rescaleParticles(particleMap,imageProperties);
-%particleWorld2 = rescaleParticles(particleMap2,imageProperties);
 particleWorldMulti = rescaleParticles(particleMapMulti,imageProperties, flowParameters.dimField);
 
 
 % loop over all multi cameras and save images
 for ncam = 1:length(cam)
-    [Im0] = createCameraImage(pivParameters, imageProperties, particleWorld, cam{ncam});
-    [Im1] = createCameraImage(pivParameters, imageProperties, particleWorld2, cam{ncam});
-    [Im0, Im1] = adjustImagesIntensity(pivParameters, Im0, Im1);
+    %[Im0] = createCameraImage(pivParameters, imageProperties, particleWorld, cam{ncam});
+    %[Im1] = createCameraImage(pivParameters, imageProperties, particleWorld2, cam{ncam});
+    [Imstack] = createCameraImage(pivParameters, imageProperties, particleWorldMulti, cam{ncam});
+    [Imstack] = adjustImagesIntensity(pivParameters, Imstack);
 
     if occluded
         bodyImg = projectBodyPoints(body,cam{ncam});
         
         % make copies of particle field without occlusion
-        Im0ref = Im0;
-        Im1ref = Im1; 
-        [Im0,Im1,msk] = overlayBody(body,bodyImg,Im0,Im1);
+        Imref = Imstack;
+        [Imstack,msk] = overlayBody(body,bodyImg,Imstack);
     
     end
     
     %Save PIV image and particle positions
-    imwrite(Im0, [outFolder filesep cam{ncam}.name filesep num2str(run, '%02d') '_0.tif']);
-    imwrite(Im1, [outFolder filesep cam{ncam}.name filesep  num2str(run, '%02d') '_1.tif']);
-    
-    if occluded
-        imwrite(Im0ref, [outFolder filesep cam{ncam}.name filesep num2str(run, '%02d') '_0_part.tif']);
-        imwrite(Im1ref, [outFolder filesep cam{ncam}.name filesep num2str(run, '%02d') '_1_part.tif']);
-        imwrite(msk, [outFolder filesep cam{ncam}.name filesep num2str(run, '%02d') '_msk.tif']);
+
+    for frame = 1:imageProperties.nFrames
+        imwrite(Imstack(:,:,frame), [outFolder filesep cam{ncam}.name filesep...
+            num2str(run, '%02d') '_' num2str(frame,'%02d') '.tif']);
+          
+        if occluded
+            imwrite(Imref(:,:,frame), [outFolder filesep cam{ncam}.name filesep...
+                num2str(run, '%02d') '_' num2str(frame,'%02d') '_part.tif']);
+            imwrite(msk, [outFolder filesep cam{ncam}.name filesep num2str(run, '%02d') '_msk.tif']);
+        end
     end
-    
     toc();
     disp('--------------------------------------------------------')
 end
 
-[Ivol1] = renderParticles3D(pivParameters, imageProperties, particleMap);
-[Ivol2] = renderParticles3D(pivParameters, imageProperties, particleMap2);
-[Ivol1,Ivol2] = adjustImagesIntensity(pivParameters,Ivol1,Ivol2); % same adjustment function works
+[IvolMulti] = renderParticles3D(pivParameters, imageProperties, particleMapMulti, flowParameters.dimField);
 
-save([metaFolder filesep 'particles' num2str(run, '%02d') '.mat'],'particleMap','particleWorld','particleMap2','particleWorld2','Ivol1','Ivol2');
+[IvolMulti] = adjustImagesIntensity(pivParameters,IvolMulti); % same adjustment function works
+
+save([metaFolder filesep 'particles' num2str(run, '%02d') '.mat'],'particleMapMulti','particleWorldMulti','IvolMulti');
 save([metaFolder filesep 'settings.mat'],'pivParameters','flowParameters','imageProperties');
 
 end

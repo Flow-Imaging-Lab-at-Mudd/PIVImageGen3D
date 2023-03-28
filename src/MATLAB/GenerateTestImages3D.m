@@ -83,7 +83,7 @@ for ncam = 1:length(xpos)
 end
 
 % configure bodies/surfaces/occlusions
-occluded=0; % true = occluded, false = no occlusion
+occluded=1; % true = occluded, false = no occlusion
 body.file = 'Block.stl'; % stl file of body/object
 body.scale = 0.1; % if stl needs resizing
 body.Position = [0 -5 10]; % location of body centroid, y+ down right now (image-style coordinates, in mm)

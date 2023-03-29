@@ -26,6 +26,7 @@
 clear *; clear GLOBAL *;
 close all;
 addpath functionsLib;
+addpath '../../stl';
 
 % specify base path of where to save data
 baseOutput = '../../out';
@@ -83,8 +84,8 @@ for ncam = 1:length(xpos)
 end
 
 % configure bodies/surfaces/occlusions
-occluded=0; % true = occluded, false = no occlusion
-body.file = 'Block.stl'; % stl file of body/object
+occluded=1; % true = occluded, false = no occlusion
+body.file = 'Concave.stl'; % stl file of body/object
 body.scale = 0.1; % if stl needs resizing
 body.Position = [0 -5 10]; % location of body centroid, y+ down right now (image-style coordinates, in mm)
 body.Shade = 1; % bright or dark occlusion (1 = bright, 0 = dark)

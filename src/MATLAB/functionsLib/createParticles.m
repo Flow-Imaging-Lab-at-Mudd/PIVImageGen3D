@@ -221,8 +221,7 @@ else
     particleMap.allParticles(1).x = imageProperties.sizeX/2;
     particleMap.allParticles(1).y = imageProperties.sizeY/2;
     particleMap.allParticles(1).z = imageProperties.voxPerSheet/2;
-    particleMap.allParticles(1).intensityA = pivParameters.particleIntensityPeak;
-    particleMap.allParticles(1).intensityB = pivParameters.particleIntensityPeak;
+    particleMap.allParticles(1).intensities = pivParameters.particleIntensityPeak;
 end
 
     if pivParameters.noMoveOutOfIA

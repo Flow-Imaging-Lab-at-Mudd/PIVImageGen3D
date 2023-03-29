@@ -115,6 +115,11 @@ if ~exist('singlePart', 'var')
     singlePart = false;
 end
 
+if singlePart == true
+    warning('Adjusting number of frames to 1 for single particle data');
+    numberOfFrames = 1;
+end
+
 if mod(sizeX,winSize)~=0
     error('Image size must be divisible by final window size');
 end

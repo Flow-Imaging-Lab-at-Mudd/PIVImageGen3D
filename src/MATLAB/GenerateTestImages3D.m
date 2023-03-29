@@ -83,7 +83,7 @@ for ncam = 1:length(xpos)
 end
 
 % configure bodies/surfaces/occlusions
-occluded=1; % true = occluded, false = no occlusion
+occluded=0; % true = occluded, false = no occlusion
 body.file = 'Block.stl'; % stl file of body/object
 body.scale = 0.1; % if stl needs resizing
 body.Position = [0 -5 10]; % location of body centroid, y+ down right now (image-style coordinates, in mm)
@@ -93,8 +93,6 @@ body.Shade = 1; % bright or dark occlusion (1 = bright, 0 = dark)
 displayFlowField=true; %Display image of each flow field,
 closeFlowField=false; %and close it automatically
 
-%flows={'rk_uniform' 'rankine_vortex' 'parabolic' 'uniform' 'stagnation',...
-%        'shear', 'shear_22d3', 'shear_45d0', 'decaying_vortex'};
 flows={'rankine_vortex'};
 %flows={'vortex_ring'};
 

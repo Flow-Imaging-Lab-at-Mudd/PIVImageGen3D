@@ -27,12 +27,10 @@ switch pivParameters.intensityMethod
     case 'normalize'
         maxI = max(Imstack(:));        
         if maxI > maxValue 
-           Im0 = Im0 .* maxValue ./ maxI;
-           Im1 = Im1 .* maxValue ./ maxI;
+           Imstack = Imstack * maxValue/maxI;
         end
 
-        Im0 = round(Im0);
-        Im1 = round(Im1);
+        Imstack = round(Imstack);
     case 'clip'
         Imstack = round(Imstack);
 

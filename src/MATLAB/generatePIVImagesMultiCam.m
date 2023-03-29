@@ -140,7 +140,8 @@ end
 if ~pivParameters.singlePart
     exportFlowFields(flowParameters, pivParameters, imageProperties, particleMap, flowField, metaFolder, run);
 end
-    particleMapMulti = displaceParticlesMulti(particleMap, flowField, flowParameters.dimField, imageProperties.nFrames);
+
+particleMapMulti = displaceParticlesMulti(particleMap, flowField, flowParameters.dimField, imageProperties.nFrames);
 
 % rescale particle positions to mm before projecting into each camera
 % (going through steps in pixels first generates reasonable displacements)

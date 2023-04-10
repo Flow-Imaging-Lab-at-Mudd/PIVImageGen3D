@@ -68,12 +68,20 @@ classdef VortexRingFlow
             z1 = zeros(size(x0,1), size(x0,2), size(x0,3));
             r1 = zeros(size(x0,1), size(x0,2), size(x0,3));
             
-            %Inside the forced Vortex Radius            
-            if ~isempty(r(r <= obj.coreRadius))
-               theta1 = obj.Weight .* obj.circulation .* obj.dt + theta0(abs(r) <= obj.coreRadius);
-               r1(abs(r) <= obj.coreRadius) = r(abs(r) <= obj.coreRadius) .* cos(theta1);
-               y1(abs(r) <= obj.coreRadius) = r(abs(r) <= obj.coreRadius) .* sin(theta1);
+            %Inside the forced Vortex Radius
+            intInd = r <= obj.coreRadius; % inside indices
+
+            if ~isempty(r(intInd))
+               theta1 = obj.Weight .* obj.circulation .* obj.dt + theta0(intInd);
+               r1(intInd) = r(intInd) .* cos(theta1);
+               y1(intInd) = r(intInd) .* sin(theta1);
             end
+
+%             if ~isempty(r(r <= obj.coreRadius))
+%                theta1 = obj.Weight .* obj.circulation .* obj.dt + theta0(abs(r) <= obj.coreRadius);
+%                r1(abs(r) <= obj.coreRadius) = r(abs(r) <= obj.coreRadius) .* cos(theta1);
+%                y1(abs(r) <= obj.coreRadius) = r(abs(r) <= obj.coreRadius) .* sin(theta1);
+%             end
             
             %Outside the forced Vortex Radius (free vortex)            
             if ~isempty(r(r > obj.coreRadius))

@@ -18,7 +18,7 @@
 %Special thanks go to Ana Margarida and Rui Aleixo
 %and their initial effort on building a draft for a similar tool.
 
-function [ IvolMulti particleMapMulti, flowField ] = generatePIVImagesMultiCam( ...
+function [ IvolMulti, particleMapMulti, flowField ] = generatePIVImagesMultiCam( ...
           flowParameters, imageProperties, pivParameters, run, cam, arrayName, baseOutput, occluded, body)
 %generatePIVImages Generates a pair of Synthetic PIV images according to specified
 %paramteres and properties.
@@ -67,41 +67,41 @@ disp(['Generating flow: ' flowField.getName()])
 disp(['to: ' outFolder]);
 disp(['dt=' num2str(flowParameters.dt)]);
 
+[flowField, particleMap] = createParticles(flowParameters, pivParameters, imageProperties, flowField);
+
 switch flowParameters.dimField
-    case 2
-    [flowField, particleMap] = createParticles(flowParameters, pivParameters, imageProperties, flowField);
+    case 2  
     
-    [x0s, y0s] = meshgrid(0:imageProperties.sizeX-1,0:imageProperties.sizeY-1);
-    [x1s, y1s] = flowField.computeDisplacementAtImagePosition(x0s, y0s);
-    
-    us = x1s - x0s;
-    vs = y1s - y0s;
-    absUs=abs(us(imageProperties.marginsX/2 + 1:end-imageProperties.marginsX/2,imageProperties.marginsY/2 + 1:end-imageProperties.marginsY/2));
-    absVs=abs(vs(imageProperties.marginsX/2 + 1:end-imageProperties.marginsX/2,imageProperties.marginsY/2 + 1:end-imageProperties.marginsY/2));
-    normVs=sqrt(us(imageProperties.marginsX/2 + 1:end-imageProperties.marginsX/2,imageProperties.marginsY/2 + 1:end-imageProperties.marginsY/2).^2 + ...
-        vs(imageProperties.marginsX/2 + 1:end-imageProperties.marginsX/2,imageProperties.marginsY/2 + 1:end-imageProperties.marginsY/2).^2);
-    disp(['MaxU is ' num2str(max(max(absUs)))]);
-    disp(['MaxV is ' num2str(max(max(absVs)))]);
-    disp(['Max velocity is ' num2str(max(max(normVs)))]);
+        [x0s, y0s] = meshgrid(0:imageProperties.sizeX-1,0:imageProperties.sizeY-1);
+        [x1s, y1s] = flowField.computeDisplacementAtImagePosition(x0s, y0s);
+        
+        us = x1s - x0s;
+        vs = y1s - y0s;
+        absUs=abs(us(imageProperties.marginsX/2 + 1:end-imageProperties.marginsX/2,imageProperties.marginsY/2 + 1:end-imageProperties.marginsY/2));
+        absVs=abs(vs(imageProperties.marginsX/2 + 1:end-imageProperties.marginsX/2,imageProperties.marginsY/2 + 1:end-imageProperties.marginsY/2));
+        normVs=sqrt(us(imageProperties.marginsX/2 + 1:end-imageProperties.marginsX/2,imageProperties.marginsY/2 + 1:end-imageProperties.marginsY/2).^2 + ...
+            vs(imageProperties.marginsX/2 + 1:end-imageProperties.marginsX/2,imageProperties.marginsY/2 + 1:end-imageProperties.marginsY/2).^2);
+        disp(['MaxU is ' num2str(max(max(absUs)))]);
+        disp(['MaxV is ' num2str(max(max(absVs)))]);
+        disp(['Max velocity is ' num2str(max(max(normVs)))]);
 
     case 3
-    [flowField, particleMap] = createParticles(flowParameters, pivParameters, imageProperties, flowField);
     
-    [x0s, y0s, z0s] = meshgrid(0:imageProperties.sizeX-1,0:imageProperties.sizeY-1, 0:imageProperties.voxPerSheet-1);
-    [x1s, y1s, z1s] = flowField.computeDisplacementAtImagePosition(x0s, y0s, z0s);
-    
-    us = x1s - x0s;
-    vs = y1s - y0s;
-    ws = z1s - z0s;
-    absUs=abs(us(imageProperties.marginsX/2 + 1:end-imageProperties.marginsX/2,imageProperties.marginsY/2 + 1:end-imageProperties.marginsY/2));
-    absVs=abs(vs(imageProperties.marginsX/2 + 1:end-imageProperties.marginsX/2,imageProperties.marginsY/2 + 1:end-imageProperties.marginsY/2));
-    %absWs=abs(ws(imageProperties.marginsX/2 + 1:end-imageProperties.marginsX/2,imageProperties.marginsY/2 + 1:end-imageProperties.marginsY/2));
-    normVs=sqrt(us(imageProperties.marginsX/2 + 1:end-imageProperties.marginsX/2,imageProperties.marginsY/2 + 1:end-imageProperties.marginsY/2).^2 + ...
-        vs(imageProperties.marginsX/2 + 1:end-imageProperties.marginsX/2,imageProperties.marginsY/2 + 1:end-imageProperties.marginsY/2).^2);
-    disp(['MaxU is ' num2str(max(max(absUs)))]);
-    disp(['MaxV is ' num2str(max(max(absVs)))]);
-    disp(['Max velocity is ' num2str(max(max(normVs)))]);
-end
+        [x0s, y0s, z0s] = meshgrid(0:imageProperties.sizeX-1,0:imageProperties.sizeY-1, 0:imageProperties.voxPerSheet-1);
+        [x1s, y1s, z1s] = flowField.computeDisplacementAtImagePosition(x0s, y0s, z0s);
+        
+        us = x1s - x0s;
+        vs = y1s - y0s;
+        ws = z1s - z0s;
+        absUs=abs(us(imageProperties.marginsX/2 + 1:end-imageProperties.marginsX/2,imageProperties.marginsY/2 + 1:end-imageProperties.marginsY/2));
+        absVs=abs(vs(imageProperties.marginsX/2 + 1:end-imageProperties.marginsX/2,imageProperties.marginsY/2 + 1:end-imageProperties.marginsY/2));
+        %absWs=abs(ws(imageProperties.marginsX/2 + 1:end-imageProperties.marginsX/2,imageProperties.marginsY/2 + 1:end-imageProperties.marginsY/2));
+        normVs=sqrt(us(imageProperties.marginsX/2 + 1:end-imageProperties.marginsX/2,imageProperties.marginsY/2 + 1:end-imageProperties.marginsY/2).^2 + ...
+            vs(imageProperties.marginsX/2 + 1:end-imageProperties.marginsX/2,imageProperties.marginsY/2 + 1:end-imageProperties.marginsY/2).^2);
+        disp(['MaxU is ' num2str(max(max(absUs)))]);
+        disp(['MaxV is ' num2str(max(max(absVs)))]);
+        disp(['Max velocity is ' num2str(max(max(normVs)))]);
+    end
 
 if flowParameters.display
     f = figure;

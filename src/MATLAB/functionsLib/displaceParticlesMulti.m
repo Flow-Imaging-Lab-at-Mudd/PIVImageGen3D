@@ -44,13 +44,20 @@ function [particleMapOut] = displaceParticlesMulti(particleMap, flowField, dim, 
 
         case 3
              for n=1:length(particleMap.allParticles)
-               x = particleMap.allParticles(n).x;
-               y = particleMap.allParticles(n).y;
-               z = particleMap.allParticles(n).z;
-               [x1, y1, z1] = flowField.computeDisplacementAtImagePosition(x, y, z);
-               particleMapOut.allParticles(n).x = x1;
-               particleMapOut.allParticles(n).y = y1;
-               particleMapOut.allParticles(n).z = z1;
+                   x = particleMap.allParticles(n).x;
+                   y = particleMap.allParticles(n).y;
+                   z = particleMap.allParticles(n).z;
+
+                   for nF = 1:Frames-1
+                        [x1, y1, z1] = flowField.computeDisplacementAtImagePosition(x(end), y(end), z(end));
+                        x = [x x1];
+                        y = [y y1];
+                        z = [z z1];
+                   end
+
+                   particleMapOut.allParticles(n).x = x;
+                   particleMapOut.allParticles(n).y = y;
+                   particleMapOut.allParticles(n).z = z;
             end
     end
         

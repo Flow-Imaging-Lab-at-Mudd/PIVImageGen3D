@@ -83,12 +83,19 @@ classdef VortexRingFlow
 %                y1(abs(r) <= obj.coreRadius) = r(abs(r) <= obj.coreRadius) .* sin(theta1);
 %             end
             
-            %Outside the forced Vortex Radius (free vortex)            
-            if ~isempty(r(r > obj.coreRadius))
-               theta1 = obj.Weight .* obj.circulation .* obj.dt .* obj.coreRadius^2 ./ r(abs(r) > obj.coreRadius).^2 + theta0(abs(r) > obj.coreRadius);
-               r1(abs(r) > obj.coreRadius) = r(abs(r) > obj.coreRadius) .* cos(theta1);
-               y1(abs(r) > obj.coreRadius) = r(abs(r) > obj.coreRadius) .* sin(theta1);
+            %Outside the forced Vortex Radius (free vortex)
+            outInd = r > obj.coreRadius;
+            if ~isempty(r(outInd))
+               theta1 = obj.Weight .* obj.circulation .* obj.dt .* obj.coreRadius^2 ./ r(outInd).^2 + theta0(outInd);
+               r1(outInd) = r(outInd) .* cos(theta1);
+               y1(outInd) = r(outInd) .* sin(theta1);
             end
+
+%             if ~isempty(r(r > obj.coreRadius))
+%                theta1 = obj.Weight .* obj.circulation .* obj.dt .* obj.coreRadius^2 ./ r(abs(r) > obj.coreRadius).^2 + theta0(abs(r) > obj.coreRadius);
+%                r1(abs(r) > obj.coreRadius) = r(abs(r) > obj.coreRadius) .* cos(theta1);
+%                y1(abs(r) > obj.coreRadius) = r(abs(r) > obj.coreRadius) .* sin(theta1);
+%             end
 
             %Handle axisymmetry (no velocity in phi direction)
             x1 = (r1+obj.majRadius).*cos(phi0);

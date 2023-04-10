@@ -101,7 +101,7 @@ switch flowParameters.dimField
         disp(['MaxU is ' num2str(max(max(absUs)))]);
         disp(['MaxV is ' num2str(max(max(absVs)))]);
         disp(['Max velocity is ' num2str(max(max(normVs)))]);
-    end
+end
 
 if flowParameters.display
     f = figure;

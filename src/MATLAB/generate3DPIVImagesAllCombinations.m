@@ -6,6 +6,7 @@ scaleProps.perpix = scale;
 
 writeCamConfig(cams,arrayName,baseOutput,scaleProps,camCombos);
 writeCamConfigLPT(cams,arrayName,baseOutput,scaleProps,camCombos);
+writeCamConfigPTV(cams,arrayName,baseOutput,scaleProps);
 
 % load occlusion and write occlusion position and mesh to file
 if occluded

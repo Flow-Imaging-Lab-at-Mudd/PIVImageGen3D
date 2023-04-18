@@ -16,6 +16,7 @@ The 3D extension includes multi-camera array simulation using the Machine Vision
 MATLAB is required to run this tool. Required MATLAB Toolboxes:
 - Symbolic Math Toolbox
 - Phased Array System Toolbox
+- Statistics and Machine Learning Toolbox
 - Partial Differential Equation Toolbox (for geometry files)
 
 Camera functions rely on the Machine Vision Toolbox by Peter Corke (https://github.com/petercorke/machinevision-toolbox-matlab)

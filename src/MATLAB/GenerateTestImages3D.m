@@ -43,7 +43,7 @@ fL = 25; % focal length (in mm)
 % create base camera with shared parameters for all cameras
 camBase = CentralCamera('focal', fL, 'pixel', pixPitch, ...
     'resolution', [sizeX sizeY], 'centre', [sizeX/2 sizeY/2], 'name', 'camBase');
-arrayName = 'LPTtestNoRot'; % identifier for camera array configuration (used in file path)
+arrayName = 'LPTtestNoRotSparse'; % identifier for camera array configuration (used in file path)
 
 % vectors of camera positions in m
 showCameras=1; % for debugging camera positions, doesn't look great in mm
@@ -116,8 +116,8 @@ noiseLevel=0; % turn off noise for now
 outOfPlaneStdDeviation=0; % turn off out of plane motion for now
 numberOfRuns=1; % number of trials with each parameter set to generate
 numberOfFrames = 4; % number of frames (constant dt) to generate in each image sequence (minimum 2 for PIV, minimum 4 for PTV)
-winSize = [64]; % interrogation window sizes (final)
-sheetThickness = [24]; % light sheet thickness in mm
+winSize = [128]; % interrogation window sizes (final)
+sheetThickness = [9.6]; % light sheet thickness in mm
 zWinScale = 1; % scale of z interrogation window size relative to x and y (assumed to be same)
 singlePart = 0; % binary, when on generates images of a single particle centered in the volume for normalizing Q
 

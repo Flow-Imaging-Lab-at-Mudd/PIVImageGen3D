@@ -1,8 +1,9 @@
 clear
+close all
 
-imagePath = 'C:\Users\lmendelson\Documents\Data\OpenLPT\LPTtest\data\cam1\01_01.txt';
-calPath = 'C:\Users\lmendelson\Documents\Data\OpenLPT\LPTtest\data\calibrationResultsLPT1.txt';
-pointsPath = 'C:\Users\lmendelson\Documents\Data\OpenLPT\LPTtest\eval\particles01.mat';
+imagePath = 'C:\Users\lmendelson\Documents\Data\OpenLPT\LPTtestNoRotSparse\data\cam1\01_01.txt';
+calPath = 'C:\Users\lmendelson\Documents\Data\OpenLPT\LPTtestNoRotSparse\data\calibrationResultsLPT1.txt';
+pointsPath = 'C:\Users\lmendelson\Documents\Data\OpenLPT\LPTtestNoRotSparse\eval\particles01.mat';
 
 % Camera and frame to debug on
 camNum = 1;
@@ -11,9 +12,24 @@ frame = 1;
 % detected particle positions
 pixelData = importdata(imagePath);
 pixelData = reshape(pixelData,2,[]);
+pixelData = pixelData';
 
-% known 3D particle positions projected through camera
-particles = load(pointsPath,'particleWorldMulti');
+figure(1)
+plot(pixelData(:,1),pixelData(:,2),'o');
+axis image
+% xlim([0 1024])
+% ylim([0 1024])
+set(gca, 'YDir','reverse');
+hold on
+
+% known 3D particle positions projected through camera and in world
+% coordinates
+particles = load(pointsPath,'particleMapMulti','particleWorldMulti');
+
+% voxel = particles.particleMapMulti;
+% vx = voxel.allParticles.x(:,frame);
+% vy = voxel.allParticles.y(:,frame);
+
 particles = particles.particleWorldMulti;
 px = particles.x(:,frame);
 py = particles.y(:,frame);
@@ -59,7 +75,7 @@ opts.EmptyLineRule = "read";
 opts = setvaropts(opts, "Parameter", "EmptyFieldRule", "auto");
 
 % Import the data
-calibrationResultsLPT1 = readtable("C:\Users\lmendelson\Documents\Data\OpenLPT\LPTtestNoRot\data\calibrationResultsLPT1.txt", opts);
+calibrationResultsLPT1 = readtable("C:\Users\lmendelson\Documents\Data\OpenLPT\LPTtestNoRotSparse\data\calibrationResultsLPT1.txt", opts);
 
 %% Clear temporary variables
 clear opts
@@ -86,10 +102,15 @@ Kind2 = calibrationResultsLPT1.Parameter == 'kr';
 camParaCalib.k1 = calibrationResultsLPT1.Value(Kind2);
 
 % projection
+% remaining issues in matching calibrations: z coordinate flip and 512
+% pixel offset (principal point?)
+
 Xc = worldData * (camParaCalib.R)';
+
 Xc(:,1) = Xc(:,1) + camParaCalib.T(1);
 Xc(:,2) = Xc(:,2) + camParaCalib.T(2);
 Xc(:,3) = Xc(:,3) + camParaCalib.T(3);
+
 dummy = camParaCalib.f_eff ./ Xc(:,3);
 Xu = Xc(:,1) .* dummy;  
 Yu = Xc(:,2) .* dummy;
@@ -99,3 +120,6 @@ ru2 = Xu .* Xu + Yu .* Yu;
 dummy = 1 + camParaCalib.k1 * ru2;
 Xd = Xu ./ dummy;
 Yd = Yu ./ dummy;
+
+figure(1)
+plot(Xd,Yd,'.');

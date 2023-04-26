@@ -3,6 +3,7 @@ inputChecks;
 scaleProps.X = sizeX;
 scaleProps.Y = sizeY;
 scaleProps.perpix = scale;
+scaleProps.angles = [rx; ry; rz]; % pass angles directly to calibrations that need them
 
 writeCamConfig(cams,arrayName,baseOutput,scaleProps,camCombos);
 writeCamConfigLPT(cams,arrayName,baseOutput,scaleProps,camCombos);

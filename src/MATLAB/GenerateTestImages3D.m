@@ -43,21 +43,25 @@ fL = 25; % focal length (in mm)
 % create base camera with shared parameters for all cameras
 camBase = CentralCamera('focal', fL, 'pixel', pixPitch, ...
     'resolution', [sizeX sizeY], 'centre', [sizeX/2 sizeY/2], 'name', 'camBase');
-arrayName = 'LPTtest'; % identifier for camera array configuration (used in file path)
+arrayName = 'LPTtestNoRot'; % identifier for camera array configuration (used in file path)
 
 % vectors of camera positions in m
 showCameras=1; % for debugging camera positions, doesn't look great in mm
-xpos = [-100 100 -100 100];
-ypos = [-100 -100 100 100]; %mvtb appears to use world coordinates y+ down
+% xpos = [-100 100 -100 100];
+% ypos = [-100 -100 100 100]; %mvtb appears to use world coordinates y+ down
+xpos = [-10 10 -10 10];
+ypos = [-10 -10 10 10]; %mvtb appears to use world coordinates y+ down
 zpos = [-542 -542 -542 -542];
 % xpos = [0];
 % ypos = [0];
 % zpos = [-542];
 
 % camera rotations about each axis in deg
-rx = [-10 -10 10 10];
-ry = [10 -10 10 -10];
+% rx = [-10 -10 10 10];
+% ry = [10 -10 10 -10];
 rz = [0 0 0 0];
+rx = rz;
+ry = rz;
 % rx = [0];
 % ry = [0];
 % rz = [0];

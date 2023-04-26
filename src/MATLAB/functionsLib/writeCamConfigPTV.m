@@ -21,37 +21,34 @@ function res = writeCamConfigPTV(cams,arrayName, baseOutput, scaleProps)
         outFile = [calPath filesep 'PTV' filesep cams{ncal}.name];
         fid = fopen(outFile,'w');
         fprintf(fid, [cams{ncal}.name '\n']);
+        fclose(fid);
 
         currentCam = cams{ncal};
         position = currentCam.T.t'; % write position, units are mm
         dlmwrite(outFile,position,'-append','Delimiter',' ');
 
-        rotation = currentCam.T;
+        rotation = [scaleProps.angles(:,ncal)'];
+        rVec = deg2rad(rotation);
+        dlmwrite(outFile,rVec,'-append','Delimiter',' ');
+
+        fid = fopen(outFile,'a');
+        f = currentCam.f/currentCam.rho(1); % principle distance divided by pixel size; check use of focal length here
+        fprintf(fid, [num2str(f) '\n']);
         
+        % correction to imaging center
+        xh = 0; % no shift for synthetic camera?
+        yh = 0; % no shift for synthetic camera?
+        fprintf(fid, [num2str(xh) ' ' num2str(yh) '\n']);
         fclose(fid);
-    
-% %         fid = fopen(outFile,'a');
-% % 
-% % 
-% %         for ncam = 1:length(useCams)
-% %             currentCam = cams{useCams(ncam)};
-% %             Pmat = currentCam.C;
-% %     
-% %             % invert y to account for coordinate differences
-% %             %Pmat(2,2) = -Pmat(2,2);
-% %             %Pmat(2,4) = -Pmat(2,4); not needed, but probably not working with
-% %             %all rotation possibilities
-% %     
-% %             position = currentCam.T.t'; % write position, units are mm
-% %             fprintf(fid, [currentCam.name '\n']);
-% %             dlmwrite(outFile,Pmat,'-append','Delimiter','\t');
-% %             dlmwrite(outFile,position,'-append','Delimiter','\t');
-%         end
-%     
-%         fprintf(fid,'0'); % add is refractive = 0 (for pinhole) at end
-%     
-%         fclose(fid);
+
+        % distortion coefficient (zero if no distortion in model)
+        if isempty(currentCam.distortion)
+            D = zeros(3,5);
+            dlmwrite(outFile,D,'-append','Delimiter',' ');
+        else
+            %fill in with distortion if using in 
+        end
+
     end
 
-    %save([calPath filesep 'cameras.mat'],'cams','camCombos'); % create .m file for camera metadata
 end

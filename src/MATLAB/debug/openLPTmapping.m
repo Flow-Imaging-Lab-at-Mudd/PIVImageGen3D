@@ -59,7 +59,7 @@ opts.EmptyLineRule = "read";
 opts = setvaropts(opts, "Parameter", "EmptyFieldRule", "auto");
 
 % Import the data
-calibrationResultsLPT1 = readtable("C:\Users\lmendelson\Documents\Data\OpenLPT\LPTtest\data\calibrationResultsLPT1.txt", opts);
+calibrationResultsLPT1 = readtable("C:\Users\lmendelson\Documents\Data\OpenLPT\LPTtestNoRot\data\calibrationResultsLPT1.txt", opts);
 
 %% Clear temporary variables
 clear opts
@@ -74,21 +74,27 @@ Tind = calibrationResultsLPT1.Parameter == 'T';
 Tvalues = calibrationResultsLPT1.Value(Tind);
 camParaCalib.T = Tvalues;
 
-% get f_effective
+% get f_effective (focal length in pixels)
 Find = calibrationResultsLPT1.Parameter == 'f_eff';
 camParaCalib.f_eff = calibrationResultsLPT1.Value(Find);
 
 % get distortion
 Kind = calibrationResultsLPT1.Parameter == 'kx';
-camParaCalib.k1 = calibrationResultsLPT1.Value(Kind);
+Kind2 = calibrationResultsLPT1.Parameter == 'kr';
 
+%k1 is kr
+camParaCalib.k1 = calibrationResultsLPT1.Value(Kind2);
+
+% projection
 Xc = worldData * (camParaCalib.R)';
 Xc(:,1) = Xc(:,1) + camParaCalib.T(1);
 Xc(:,2) = Xc(:,2) + camParaCalib.T(2);
 Xc(:,3) = Xc(:,3) + camParaCalib.T(3);
 dummy = camParaCalib.f_eff ./ Xc(:,3);
-Xu = Xc(:,1) .* dummy;  % undistorted image coordinates
+Xu = Xc(:,1) .* dummy;  
 Yu = Xc(:,2) .* dummy;
+
+% undistorted image coordinates
 ru2 = Xu .* Xu + Yu .* Yu;
 dummy = 1 + camParaCalib.k1 * ru2;
 Xd = Xu ./ dummy;

@@ -147,7 +147,6 @@ particleMapMulti = displaceParticlesMulti(particleMap, flowField, flowParameters
 % (going through steps in pixels first generates reasonable displacements)
 particleWorldMulti = rescaleParticles(particleMapMulti,imageProperties, flowParameters.dimField);
 
-
 % loop over all multi cameras and save images
 for ncam = 1:length(cam)
     %[Im0] = createCameraImage(pivParameters, imageProperties, particleWorld, cam{ncam});

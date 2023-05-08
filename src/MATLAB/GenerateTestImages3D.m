@@ -43,7 +43,7 @@ fL = 25; % focal length (in mm)
 % create base camera with shared parameters for all cameras
 camBase = CentralCamera('focal', fL, 'pixel', pixPitch, ...
     'resolution', [sizeX sizeY], 'centre', [sizeX/2 sizeY/2], 'name', 'camBase');
-arrayName = 'LPTtestNoRotSparse'; % identifier for camera array configuration (used in file path)
+arrayName = 'outputTest'; % identifier for camera array configuration (used in file path)
 
 % vectors of camera positions in m
 showCameras=1; % for debugging camera positions, doesn't look great in mm
@@ -110,7 +110,7 @@ flows={'rankine_vortex'};
 % configure PIV
 bitDepths=8; % leave at 8 bits for all tests
 deltaXFactor=0.25; % max. displacement as a fraction of the final window size
-particleRadius=2.5; % in pixels
+particleRadius=1.5; % in pixels
 Ni=1; % # of particles in each window
 noiseLevel=0; % turn off noise for now
 outOfPlaneStdDeviation=0; % turn off out of plane motion for now

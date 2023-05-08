@@ -3,6 +3,7 @@ inputChecks;
 scaleProps.X = sizeX;
 scaleProps.Y = sizeY;
 scaleProps.perpix = scale;
+scaleProps.pos = [xpos; ypos; zpos]; % record camera positions directly for metadata
 scaleProps.angles = [rx; ry; rz]; % pass angles directly to calibrations that need them
 
 writeCamConfig(cams,arrayName,baseOutput,scaleProps,camCombos);
@@ -114,7 +115,7 @@ for i=1:size(flows, 2)
             
                                         disp(['Generating combination ' num2str(currentCombination) ' of ' num2str(totalCombinations)]);
                                         [~, particleMap, flowField] = generatePIVImagesMultiCam(flowParameters, imageProperties, pivParameters,...
-                                            run, cams, arrayName, baseOutput, occluded, body);
+                                            run, cams, arrayName, baseOutput, occluded, body, scaleProps);
                                         currentCombination = currentCombination + 1;
                                     end
                                 end

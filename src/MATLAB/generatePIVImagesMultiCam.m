@@ -19,7 +19,7 @@
 %and their initial effort on building a draft for a similar tool.
 
 function [ IvolMulti, particleMapMulti, flowField ] = generatePIVImagesMultiCam( ...
-          flowParameters, imageProperties, pivParameters, run, cam, arrayName, baseOutput, occluded, body)
+          flowParameters, imageProperties, pivParameters, run, cam, arrayName, baseOutput, occluded, body, scaleProps)
 %generatePIVImages Generates a pair of Synthetic PIV images according to specified
 %paramteres and properties.
 %   flowParameters flow related configuration
@@ -184,7 +184,7 @@ end
 [IvolMulti] = adjustImagesIntensity(pivParameters,IvolMulti); % same adjustment function works
 
 save([metaFolder filesep 'particles' num2str(run, '%02d') '.mat'],'particleMapMulti','particleWorldMulti','IvolMulti');
-save([metaFolder filesep 'settings.mat'],'pivParameters','flowParameters','imageProperties');
+save([metaFolder filesep 'settings.mat'],'pivParameters','flowParameters','imageProperties','scaleProps');
 
 end
 

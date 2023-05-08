@@ -101,6 +101,17 @@ Kind2 = calibrationResultsLPT1.Parameter == 'kr';
 %k1 is kr
 camParaCalib.k1 = calibrationResultsLPT1.Value(Kind2);
 
+% pixel and scale properties
+Noh_ind = calibrationResultsLPT1.Parameter == 'Noffh';
+Now_ind = calibrationResultsLPT1.Parameter == 'Noffw';
+Nph_ind = calibrationResultsLPT1.Parameter == 'Npixw';
+Npw_ind = calibrationResultsLPT1.Parameter == 'Npixh';
+
+camParaCalib.Noffh = calibrationResultsLPT1.Value(Noh_ind);
+camParaCalib.Noffw = calibrationResultsLPT1.Value(Now_ind);
+camParaCalib.Npixh = calibrationResultsLPT1.Value(Nph_ind);
+camParaCalib.Npixw = calibrationResultsLPT1.Value(Npw_ind);
+
 % projection
 % remaining issues in matching calibrations: z coordinate flip and 512
 % pixel offset (principal point?)
@@ -121,5 +132,12 @@ dummy = 1 + camParaCalib.k1 * ru2;
 Xd = Xu ./ dummy;
 Yd = Yu ./ dummy;
 
+% shifts
+Xtest_proj(:,1) = Xd + camParaCalib.Noffw + camParaCalib.Npixw/2;
+Xtest_proj(:,2) = camParaCalib.Npixh/2 - camParaCalib.Noffh - Yd;
+
+%Xtest_proj(:,1) = Xd/camParaCalib.wpix + camParaCalib.Noffw + camParaCalib.Npixw/2;
+%Xtest_proj(:,2) = camParaCalib.Npixh/2 - camParaCalib.Noffh - Yd/camParaCalib.hpix;
+
 figure(1)
-plot(Xd,Yd,'.');
+plot(Xtest_proj(:,1),Xtest_proj(:,2),'.');

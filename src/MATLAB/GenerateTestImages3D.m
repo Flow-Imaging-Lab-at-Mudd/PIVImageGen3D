@@ -43,25 +43,23 @@ fL = 25; % focal length (in mm)
 % create base camera with shared parameters for all cameras
 camBase = CentralCamera('focal', fL, 'pixel', pixPitch, ...
     'resolution', [sizeX sizeY], 'centre', [sizeX/2 sizeY/2], 'name', 'camBase');
-arrayName = 'outputTest'; % identifier for camera array configuration (used in file path)
+arrayName = 'extremeAngle3'; % identifier for camera array configuration (used in file path)
 
 % vectors of camera positions in m
 showCameras=1; % for debugging camera positions, doesn't look great in mm
-% xpos = [-100 100 -100 100];
-% ypos = [-100 -100 100 100]; %mvtb appears to use world coordinates y+ down
-xpos = [-10 10 -10 10];
-ypos = [-10 -10 10 10]; %mvtb appears to use world coordinates y+ down
+xpos = 3*[-100 100 -100 100];
+ypos = 3*[-100 -100 100 100]; %mvtb appears to use world coordinates y+ down
+% xpos = [-10 10 -10 10];
+% ypos = [-10 -10 10 10]; %mvtb appears to use world coordinates y+ down
 zpos = [-542 -542 -542 -542];
 % xpos = [0];
 % ypos = [0];
 % zpos = [-542];
 
 % camera rotations about each axis in deg
-% rx = [-10 -10 10 10];
-% ry = [10 -10 10 -10];
+%rx = 2.5*[-10 -10 10 10];
+%ry = 2.8*[10 -10 10 -10];
 rz = [0 0 0 0];
-rx = rz;
-ry = rz;
 % rx = [0];
 % ry = [0];
 % rz = [0];
@@ -76,10 +74,25 @@ camCombos = {[1,2,3,4],...
 % create a cell array of all the cameras (to do: move out of config file)
 for ncam = 1:length(xpos)
     % rotation matrices
+
+    rx(ncam) = atand(ypos(ncam)/zpos(ncam));    
     rxm = rotx(rx(ncam));
+
+    campos = [xpos(ncam) ypos(ncam) zpos(ncam)]';
+    postmp = rxm*[xpos(ncam) ypos(ncam) zpos(ncam)]'; % position in new coordinates
+
+    ry(ncam) = atand(postmp(1)/postmp(3));
     rym = roty(ry(ncam));
+
     rzm = rotz(rz(ncam));
-    rot = rxm*rym*rzm;
+
+    % funky sign fix
+    rxm = rotx(-rx(ncam));
+    rx(ncam)=-rx(ncam);
+    
+    %rot = rzm*rym*rxm;
+    rot = rzm*rxm*rym;
+
     T = SE3(rot,[xpos(ncam) ypos(ncam) zpos(ncam)]);
     camTmp = camBase.move(T);
     camTmp.name = ['cam' num2str(ncam)];
@@ -94,10 +107,10 @@ for ncam = 1:length(xpos)
 end
 
 % configure bodies/surfaces/occlusions
-occluded=0; % true = occluded, false = no occlusion
+occluded=1; % true = occluded, false = no occlusion
 body.file = 'Concave.stl'; % stl file of body/object
 body.scale = 0.1; % if stl needs resizing
-body.Position = [0 -5 10]; % location of body centroid, y+ down right now (image-style coordinates, in mm)
+body.Position = [0 0 0]; % location of body centroid, y+ down right now (image-style coordinates, in mm)
 body.Shade = 1; % bright or dark occlusion (1 = bright, 0 = dark)
 
 % display parameters for flow field
@@ -110,14 +123,14 @@ flows={'rankine_vortex'};
 % configure PIV
 bitDepths=8; % leave at 8 bits for all tests
 deltaXFactor=0.25; % max. displacement as a fraction of the final window size
-particleRadius=1.5; % in pixels
+particleRadius=2; % in pixels
 Ni=1; % # of particles in each window
 noiseLevel=0; % turn off noise for now
 outOfPlaneStdDeviation=0; % turn off out of plane motion for now
 numberOfRuns=1; % number of trials with each parameter set to generate
 numberOfFrames = 4; % number of frames (constant dt) to generate in each image sequence (minimum 2 for PIV, minimum 4 for PTV)
-winSize = [128]; % interrogation window sizes (final)
-sheetThickness = [9.6]; % light sheet thickness in mm
+winSize = [32]; % interrogation window sizes (final)
+sheetThickness = [24]; % light sheet thickness in mm
 zWinScale = 1; % scale of z interrogation window size relative to x and y (assumed to be same)
 singlePart = 0; % binary, when on generates images of a single particle centered in the volume for normalizing Q
 

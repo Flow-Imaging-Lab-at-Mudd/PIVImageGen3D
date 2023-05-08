@@ -106,8 +106,11 @@ for i=1:size(flows, 2)
             
                                         DI = single(pivParameters.lastWindow(1)) * imageProperties.mmPerPixel;
                                         dtao = 2.0 * single(pivParameters.particleRadius) * imageProperties.mmPerPixel;
+                                        pivParameters.dA = pi*pivParameters.particleRadius^2; % particle area in pixels
                                         pivParameters.c = single(pivParameters.Ni) / (DI^2 * zWinScale * DI); % concentration (particles per mm3)
-                                        pivParameters.Ns = single(pivParameters.Ni)/(4.0/pi*DI/dtao); % source density
+                                        pivParameters.Ns = single(pivParameters.Ni)/(4.0/pi*DI/dtao); % source density, questionable math
+                                        pivParameters.ppp = pivParameters.Ni / (pivParameters.lastWindow(1)*pivParameters.lastWindow(2)) *...
+                                            imageProperties.voxPerSheet/pivParameters.lastWindow(3); % assumes zero window overlap during image generation
             
                                         disp(['Generating combination ' num2str(currentCombination) ' of ' num2str(totalCombinations)]);
                                         [~, particleMap, flowField] = generatePIVImagesMultiCam(flowParameters, imageProperties, pivParameters,...

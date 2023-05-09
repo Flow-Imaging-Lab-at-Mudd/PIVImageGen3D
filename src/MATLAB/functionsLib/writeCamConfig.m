@@ -19,12 +19,14 @@ function res = writeCamConfig(cams,arrayName,baseOutput, scaleProps,camCombos)
         fprintf(fid, 'Synthetic Calibration from Image Generator \n');
         fprintf(fid, '0 \n'); % no reprojection error because perfect camera model
         fprintf(fid, [num2str(scaleProps.X) '\t' num2str(scaleProps.Y) '\t' num2str(1/scaleProps.perpix) '\n']);
-        fprintf(fid, [num2str(length(cams)) '\n']);
+
+        useCams = camCombos{ncal};
+        fprintf(fid, [num2str(length(useCams)) '\n']);
         fclose(fid);
     
         fid = fopen(outFile,'a');
 
-        useCams = camCombos{ncal};
+        
 
         for ncam = 1:length(useCams)
             currentCam = cams{useCams(ncam)};

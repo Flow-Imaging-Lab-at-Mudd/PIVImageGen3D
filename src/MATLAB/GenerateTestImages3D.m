@@ -43,14 +43,16 @@ fL = 25; % focal length (in mm)
 % create base camera with shared parameters for all cameras
 camBase = CentralCamera('focal', fL, 'pixel', pixPitch, ...
     'resolution', [sizeX sizeY], 'centre', [sizeX/2 sizeY/2], 'name', 'camBase');
-arrayName = 'blockSquare'; % identifier for camera array configuration (used in file path)
+arrayName = 'tetraCircleMed'; % identifier for camera array configuration (used in file path)
 
 % vectors of camera positions in m
 showCameras=1; % for debugging camera positions, doesn't look great in mm
-xorder = [-1 1 -1 1];
-yorder = [-1 -1 1 1];
-xpos = horzcat(0,50*xorder,100*xorder,150*xorder,200*xorder,250*xorder,300*xorder);
-ypos = horzcat(0,50*yorder,100*yorder,150*yorder,200*yorder,250*yorder,300*yorder); %mvtb appears to use world coordinates y+ down
+theta = linspace(0,2*pi,7);
+theta = theta(1:6);
+xorder = cos(theta);
+yorder = sin(theta);
+xpos = horzcat(50*xorder,100*xorder,150*xorder,200*xorder,250*xorder,300*xorder);
+ypos = horzcat(50*yorder,100*yorder,150*yorder,200*yorder,250*yorder,300*yorder); %mvtb appears to use world coordinates y+ down
 zpos = -542*ones(size(xpos));
 % xpos = [0];
 % ypos = [0];
@@ -65,18 +67,12 @@ rz = zeros(size(ypos));
 saveMultCal = 1; % enable to save calibration files for multiple combinations of cameras
 % disable to save one calibration file containing all cameras
 
-camCombos = {[1,2,3,4,5],...
-            [2,3,4,5],...
-            [1,6,7,8,9],...
-            [6,7,8,9],...
-            [1,10,11,12,13],...
-            [10,11,12,13],...
-            [1,14,15,16,17],...
-            [14,15,16,17],...
-            [1,18,19,20,21],...
-            [18,19,20,21],...
-            [1,22,23,24,25],...
-            [22,23,24,25]}; % cell array containing each separate combination of cameras to save
+camCombos = {[1,2,3,4,5,6],...
+            [7,8,9,10,11,12],...
+            [13,14,15,16,17,18],...
+            [19,20,21,22,23,24],...
+            [25,26,27,28,29,30],...
+            [31,32,33,34,35,36]}; % cell array containing each separate combination of cameras to save
 
 % create a cell array of all the cameras (to do: move out of config file)
 for ncam = 1:length(xpos)
@@ -115,8 +111,8 @@ end
 
 % configure bodies/surfaces/occlusions
 occluded=1; % true = occluded, false = no occlusion
-body.file = 'Block.stl'; % stl file of body/object
-body.scale = 0.1; % if stl needs resizing
+body.file = 'Tetrahedron.stl'; % stl file of body/object
+body.scale = 3*0.1; % if stl needs resizing
 body.Position = [0 0 10]; % location of body centroid, y+ down right now (image-style coordinates, in mm)
 body.Shade = 1; % bright or dark occlusion (1 = bright, 0 = dark)
 

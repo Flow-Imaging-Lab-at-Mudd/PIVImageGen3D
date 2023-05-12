@@ -43,14 +43,17 @@ fL = 25; % focal length (in mm)
 % create base camera with shared parameters for all cameras
 camBase = CentralCamera('focal', fL, 'pixel', pixPitch, ...
     'resolution', [sizeX sizeY], 'centre', [sizeX/2 sizeY/2], 'name', 'camBase');
-arrayName = 'tetraCircleMed'; % identifier for camera array configuration (used in file path)
+arrayName = 'vrectBlockMed'; % identifier for camera array configuration (used in file path)
 
 % vectors of camera positions in m
 showCameras=1; % for debugging camera positions, doesn't look great in mm
-theta = linspace(0,2*pi,7);
-theta = theta(1:6);
-xorder = cos(theta);
-yorder = sin(theta);
+% theta = linspace(0,2*pi,7);
+% theta = theta(1:6);
+% xorder = cos(theta);
+% yorder = sin(theta);
+yorder = [-2 -1 -1 1 1 2];
+xorder = [0 -1 1 -1 1 0];
+
 xpos = horzcat(50*xorder,100*xorder,150*xorder,200*xorder,250*xorder,300*xorder);
 ypos = horzcat(50*yorder,100*yorder,150*yorder,200*yorder,250*yorder,300*yorder); %mvtb appears to use world coordinates y+ down
 zpos = -542*ones(size(xpos));
@@ -111,7 +114,7 @@ end
 
 % configure bodies/surfaces/occlusions
 occluded=1; % true = occluded, false = no occlusion
-body.file = 'Tetrahedron.stl'; % stl file of body/object
+body.file = 'Block.stl'; % stl file of body/object
 body.scale = 3*0.1; % if stl needs resizing
 body.Position = [0 0 10]; % location of body centroid, y+ down right now (image-style coordinates, in mm)
 body.Shade = 1; % bright or dark occlusion (1 = bright, 0 = dark)

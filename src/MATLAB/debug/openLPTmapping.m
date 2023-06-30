@@ -116,6 +116,23 @@ camParaCalib.Npixw = calibrationResultsLPT1.Value(Npw_ind);
 % remaining issues in matching calibrations: z coordinate flip and 512
 % pixel offset (principal point?)
 
+% C++ projection for reference
+% inline Position Camera::ImageToWorld(const Position& p) const
+% {
+% 	Position tmp(p * T.Z() / f_eff);
+% 	Position proj(tmp.X(), tmp.Y(), T.Z());
+% 	// return coordinates of p in 3D world coordinates
+% 	//return ((proj - T) * R);
+% 	return (Rinv * (proj - T));
+% }
+% 
+% inline Position Camera::WorldToImage(const Position& p) const
+% {
+% 	//Position proj(p * Rinv + T);
+% 	Position proj(R * p + T);
+% 	return (proj * (f_eff / proj.Z())); 
+% }
+
 Xc = worldData * (camParaCalib.R)';
 
 Xc(:,1) = Xc(:,1) + camParaCalib.T(1);
@@ -131,6 +148,42 @@ ru2 = Xu .* Xu + Yu .* Yu;
 dummy = 1 + camParaCalib.k1 * ru2;
 Xd = Xu ./ dummy;
 Yd = Yu ./ dummy;
+
+% c++ undistortion for reference
+% inline Position Camera::UnDistort(const Position& p) const
+% {
+% 	//Position centered(p);
+% 	// shift origin to the center of the image
+% 	//centered -= Position(Npixw/2, Npixh/2, 0);
+% 	
+% 	// account for left-handed coordinate system...
+% 	Position centered(p.X() - Npixw/2 - Noffw, -p.Y() + Npixh/2 - Noffh, p.Z());
+% 	
+% 	// scale into physical units
+% 	centered *= Position(wpix, hpix, 0);
+% 	// remove possible cylindrical distortion
+% 	// 	cout << corrframes[0] << endl;should this be 1.0/kx? i.e., should kx be bigger or smaller than 1?
+% 	centered *= Position(kx, 1, 0);
+% 	// compute the radial correction factor
+% 	
+% 	 // Old code
+% 	
+% 	if (kr == 0) 
+% 		return centered;
+% 	
+% 	else {
+% 		// New Code (accounting for radial distortion)
+% 		double y = centered.Y();
+% 		double x = centered.X();
+% 		double a = centered.X() / centered.Y();
+% 
+% 		y = (1 - sqrt(1 - 4 * pow(y, 2) * kr*(pow(a, 2) + 1))) / (2 * y * kr * (pow(a, 2) + 1));
+% 		x = a*y;
+% 
+% 		Position M(x, y, 0);
+% 		return M;
+% 	}
+% }
 
 % shifts
 Xtest_proj(:,1) = Xd + camParaCalib.Noffw + camParaCalib.Npixw/2;

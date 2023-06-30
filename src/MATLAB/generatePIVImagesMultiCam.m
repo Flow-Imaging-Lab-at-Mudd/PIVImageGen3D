@@ -1,4 +1,7 @@
 %This program generates synthetic PIV images and exports validation data.
+% Modified for 3D use by Leah Mendelson and Zhian Zhou, Flow Imaging Lab at
+% Mudd, 2022-2023
+
 %Copyright (C) 2019  Luís Mendes, Prof. Rui Ferreira, Prof. Alexandre Bernardino
 %
 %This program is free software; you can redistribute it and/or

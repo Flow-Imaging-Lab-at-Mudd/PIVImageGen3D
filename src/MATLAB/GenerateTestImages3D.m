@@ -43,23 +43,25 @@ fL = 25; % focal length (in mm)
 % create base camera with shared parameters for all cameras
 camBase = CentralCamera('focal', fL, 'pixel', pixPitch, ...
     'resolution', [sizeX sizeY], 'centre', [sizeX/2 sizeY/2], 'name', 'camBase');
-arrayName = 'vrectBlockMed'; % identifier for camera array configuration (used in file path)
+arrayName = 'renderTest'; % identifier for camera array configuration (used in file path)
 
 % vectors of camera positions in m
 showCameras=1; % for debugging camera positions, doesn't look great in mm
+
+% TO DO: WRITE INTO GENERATE CAMERA PATTERN FUNCTION
 % theta = linspace(0,2*pi,7);
 % theta = theta(1:6);
 % xorder = cos(theta);
 % yorder = sin(theta);
-yorder = [-2 -1 -1 1 1 2];
-xorder = [0 -1 1 -1 1 0];
-
-xpos = horzcat(50*xorder,100*xorder,150*xorder,200*xorder,250*xorder,300*xorder);
-ypos = horzcat(50*yorder,100*yorder,150*yorder,200*yorder,250*yorder,300*yorder); %mvtb appears to use world coordinates y+ down
-zpos = -542*ones(size(xpos));
-% xpos = [0];
-% ypos = [0];
-% zpos = [-542];
+% xorder = [-2 -1 -1 1 1 2];
+% yorder = [0 -1 1 -1 1 0];
+% 
+% xpos = horzcat(50*xorder,100*xorder,150*xorder,200*xorder,250*xorder,300*xorder);
+% ypos = horzcat(50*yorder,100*yorder,150*yorder,200*yorder,250*yorder,300*yorder); %mvtb appears to use world coordinates y+ down
+% zpos = -542*ones(size(xpos));
+xpos = [0];
+ypos = [0];
+zpos = [-542];
 
 % camera rotations about each axis in deg
 rz = zeros(size(ypos));
@@ -67,9 +69,10 @@ rz = zeros(size(ypos));
 % ry = [0];
 % rz = [0];
 
-saveMultCal = 1; % enable to save calibration files for multiple combinations of cameras
+saveMultCal = 0; % enable to save calibration files for multiple combinations of cameras
 % disable to save one calibration file containing all cameras
 
+% TO DO: INCORPORATE INTO CAMERA PATTERN FUNCTION
 camCombos = {[1,2,3,4,5,6],...
             [7,8,9,10,11,12],...
             [13,14,15,16,17,18],...
@@ -113,7 +116,7 @@ for ncam = 1:length(xpos)
 end
 
 % configure bodies/surfaces/occlusions
-occluded=1; % true = occluded, false = no occlusion
+occluded=0; % true = occluded, false = no occlusion
 body.file = 'Block.stl'; % stl file of body/object
 body.scale = 3*0.1; % if stl needs resizing
 body.Position = [0 0 10]; % location of body centroid, y+ down right now (image-style coordinates, in mm)
@@ -129,8 +132,8 @@ flows={'rankine_vortex'};
 % configure PIV
 bitDepths=8; % leave at 8 bits for all tests
 deltaXFactor=0.25; % max. displacement as a fraction of the final window size
-particleRadius=1.5; % in pixels
-Ni=6; % # of particles in each window
+particleRadius=5; % in pixels
+Ni=1; % # of particles in each window
 noiseLevel=0; % turn off noise for now
 outOfPlaneStdDeviation=0; % turn off out of plane motion for now
 numberOfRuns=1; % number of trials with each parameter set to generate

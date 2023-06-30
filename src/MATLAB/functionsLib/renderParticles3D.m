@@ -89,8 +89,10 @@ function [ IvolMulti ] = renderParticles3D(pivParameters, imageProperties, parti
         backMargin = ceil(imageProperties.voxPerSheet - imageProperties.marginsZ/2);
     
         Ivol = Ivol(topMargin+1:bottomMargin, leftMargin+1:rightMargin,frontMargin+1:backMargin);
+
+        IvolMulti(:,:,:,frame) = Ivol;
    end
 
-   IvolMulti(:,:,:,frame) = Ivol;
+   
 end
 
